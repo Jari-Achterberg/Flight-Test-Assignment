@@ -1,3 +1,41 @@
+# Citation 550 - Linear simulation
+
+# xcg = 0.25 * c
+
+# Stationary flight condition
+
+hp0    =       	      # pressure altitude in the stationary flight condition [m]
+V0     =             # true airspeed in the stationary flight condition [m/sec]
+alpha0 =             # angle of attack in the stationary flight condition [rad]
+th0    =             # pitch angle in the stationary flight condition [rad]
+
+# Aircraft mass
+m      =             # mass [kg]
+
+# aerodynamic properties
+e      =             # Oswald factor [ ]
+CD0    =             # Zero lift drag coefficient [ ]
+CLa    =             # Slope of CL-alpha curve [ ]
+
+# Longitudinal stability
+Cma    =             # longitudinal stabilty [ ]
+Cmde   =             # elevator effectiveness [ ]
+
+# Aircraft geometry
+
+S      = 30.00	          # wing area [m^2]
+Sh     = 0.2 * S         # stabiliser area [m^2]
+Sh_S   = Sh / S	          # [ ]
+lh     = 0.71 * 5.968    # tail length [m]
+c      = 2.0569	          # mean aerodynamic cord [m]
+lh_c   = lh / c	          # [ ]
+b      = 15.911	          # wing span [m]
+bh     = 5.791	          # stabilser span [m]
+A      = b ** 2 / S      # wing aspect ratio [ ]
+Ah     = bh ** 2 / Sh    # stabilser aspect ratio [ ]
+Vh_V   = 1	          # [ ]
+ih     = -2 * pi / 180   # stabiliser angle of incidence [rad]
+
 # Constant values concerning atmosphere and gravity
 
 rho0   = 1.2250          # air density at sea level [kg/m^3] 
