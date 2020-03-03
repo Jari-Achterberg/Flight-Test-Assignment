@@ -1,5 +1,7 @@
 # Citation 550 - Linear simulation
 
+import numpy as np
+
 # xcg = 0.25 * c
 
 # Stationary flight condition
@@ -108,3 +110,10 @@ Cnp    =  -0.0602
 Cnr    =  -0.2061
 Cnda   =  -0.0120
 Cndr   =  -0.0939
+
+#--------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
+
+C1 = np.matrix('''(-2*muc*c)/(V0**2),0,0,0;
+0,(CZadot-2*muc)*(c/V0),0,0;
+0,0,-c/V0,0;
+0,(Cmadot*c)/V,0,(-2*muc*c**2 * KY2)/V0**2''')
