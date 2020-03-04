@@ -1,6 +1,7 @@
 # Citation 550 - Linear simulation
 
 import numpy as np
+from math import pi, sin, cos
 
 # xcg = 0.25 * c
 
@@ -23,6 +24,7 @@ CLa    =             # Slope of CL-alpha curve [ ]
 Cma    =             # longitudinal stabilty [ ]
 Cmde   =             # elevator effectiveness [ ]
 
+
 # Aircraft geometry
 
 S      = 30.00	          # wing area [m^2]
@@ -41,13 +43,13 @@ ih     = -2 * pi / 180   # stabiliser angle of incidence [rad]
 # Constant values concerning atmosphere and gravity
 
 rho0   = 1.2250          # air density at sea level [kg/m^3] 
-lambda = -0.0065         # temperature gradient in ISA [K/m]
+lambdaa = -0.0065         # temperature gradient in ISA [K/m]
 Temp0  = 288.15          # temperature at sea level in ISA [K]
 R      = 287.05          # specific gas constant [m^2/sec^2K]
 g      = 9.81            # [m/sec^2] (gravity constant)
 
 # air density [kg/m^3]  
-rho    = rho0 * power( ((1+(lambda * hp0 / Temp0))), (-((g / (lambda*R)) + 1)))
+rho    = rho0 * power( ((1+(lambdaa * hp0 / Temp0))), (-((g / (lambdaa*R)) + 1)))
 W      = m * g            # [N]       (aircraft weight)
 
 # Constant values concerning aircraft inertia
@@ -113,7 +115,34 @@ Cndr   =  -0.0939
 
 #--------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
 
-C1 = np.matrix('''(-2*muc*c)/(V0**2),0,0,0;
-0,(CZadot-2*muc)*(c/V0),0,0;
-0,0,-c/V0,0;
-0,(Cmadot*c)/V,0,(-2*muc*c**2 * KY2)/V0**2''')
+C1 = np.array([[(-2*muc*c)/(V0**2),0,0,0],
+[0,(CZadot-2*muc)*(c/V0),0,0],
+[0,0,-c/V0,0],
+[0,(Cmadot*c)/V0,0,(-2*muc*c**2 * KY2)/V0**2]])
+
+C2 = np.array([[CXu/V0,CXa,CZ0,CXq*(c/V0)],
+               [CZu/V0,CZa,-CX0,(CZq+2*muc)*(c/V0)],
+               [0,0,0,c/V0],
+               [Cmu/V0,Cma,0,(Cmq*c)/V0]])
+
+C3 = np.array([[CXde],
+               [CZde],
+               [0],
+               [Cmde]])
+
+#---------Asymmetric equations of motion in the form of: D1 * xdot + D2 * x + D3 * u ----------------
+
+D1 = np.array([[(CYbdot-2*mub)*(b/V0),0,0,0],
+               [0,-b/(2*V0),0,0],
+               [0,0,-2*mub*KX2*(b**2 / V0**2),2*mub*KXZ*(b**2 / V0**2)],
+               [Cnbdot*(b/V0),0,0,-2*mub*KZ2*(b**2 / V0**2)]])
+
+D2 = np.array([[CYb,CL,(CYr*b)/(2*V0),(CYr-4*mub)*(b/(2*V0))],
+               [0,0,b/(2*V0),0],
+               [Clb,0,(Clp*b)/(2*V0),Clr*(b/(2*V0))],
+               [Cnb,0,(Cnp*b)/(2*V0),(Cnr*b)/(2*V0)]])
+
+D3 = np.array([[CYda,CYdr],
+               [0,0],
+               [Clda,Cldr],
+               [Cnda,Cndr]])
