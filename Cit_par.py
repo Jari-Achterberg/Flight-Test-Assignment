@@ -125,10 +125,10 @@ C2 = np.array([[CXu/V0,CXa,CZ0,CXq*(c/V0)],
                [0,0,0,c/V0],
                [Cmu/V0,Cma,0,(Cmq*c)/V0]])
 
-C3 = np.array([[-CXde],
-               [-CZde],
+C3 = np.array([[CXde],
+               [CZde],
                [0],
-               [-Cmde]])
+               [Cmde]])
 
 #---------Asymmetric equations of motion in the form of: D1 * xdot + D2 * x + D3 * u ----------------
 
@@ -142,9 +142,9 @@ D2 = np.array([[CYb,CL,(CYp*b)/(2*V0),(CYr-4*mub)*(b/(2*V0))],
                [Clb,0,(Clp*b)/(2*V0),Clr*(b/(2*V0))],
                [Cnb,0,(Cnp*b)/(2*V0),(Cnr*b)/(2*V0)]])
 
-D3 = np.array([[-CYda,-CYdr],
+D3 = np.array([[CYda,CYdr],
                [0,0],
-               [-Clda,-Cldr],
-               [-Cnda,-Cndr]])
+               [Clda,Cldr],
+               [Cnda,Cndr]])
 
 #fdskj
