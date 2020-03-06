@@ -118,33 +118,33 @@ Cndr   =  -0.0939
 C1 = np.array([[(-2*muc*c)/(V0**2),0,0,0],
 [0,(CZadot-2*muc)*(c/V0),0,0],
 [0,0,-c/V0,0],
-[0,(Cmadot*c)/V0,0,(-2*muc*c**2 * KY2)/V0**2]])
+[0,(Cmadot*c)/V0,0,(-2*muc*c**2 * KY2)/(V0**2)]])
 
 C2 = np.array([[CXu/V0,CXa,CZ0,CXq*(c/V0)],
                [CZu/V0,CZa,-CX0,(CZq+2*muc)*(c/V0)],
                [0,0,0,c/V0],
                [Cmu/V0,Cma,0,(Cmq*c)/V0]])
 
-C3 = np.array([[CXde],
-               [CZde],
+C3 = np.array([[-CXde],
+               [-CZde],
                [0],
-               [Cmde]])
+               [-Cmde]])
 
 #---------Asymmetric equations of motion in the form of: D1 * xdot + D2 * x + D3 * u ----------------
 
 D1 = np.array([[(CYbdot-2*mub)*(b/V0),0,0,0],
                [0,-b/(2*V0),0,0],
                [0,0,-2*mub*KX2*(b**2 / V0**2),2*mub*KXZ*(b**2 / V0**2)],
-               [Cnbdot*(b/V0),0,0,-2*mub*KZ2*(b**2 / V0**2)]])
+               [Cnbdot*(b/V0),0,2*mub*KXZ*(b**2/V0**2),-2*mub*KZ2*(b**2 / V0**2)]])
 
-D2 = np.array([[CYb,CL,(CYr*b)/(2*V0),(CYr-4*mub)*(b/(2*V0))],
+D2 = np.array([[CYb,CL,(CYp*b)/(2*V0),(CYr-4*mub)*(b/(2*V0))],
                [0,0,b/(2*V0),0],
                [Clb,0,(Clp*b)/(2*V0),Clr*(b/(2*V0))],
                [Cnb,0,(Cnp*b)/(2*V0),(Cnr*b)/(2*V0)]])
 
-D3 = np.array([[CYda,CYdr],
+D3 = np.array([[-CYda,-CYdr],
                [0,0],
-               [Clda,Cldr],
-               [Cnda,Cndr]])
+               [-Clda,-Cldr],
+               [-Cnda,-Cndr]])
 
 #fdskj
