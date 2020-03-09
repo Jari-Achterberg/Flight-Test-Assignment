@@ -7,7 +7,7 @@ A = np.array([[1,2,3,4],
 
 def geteigenvalues(A):
 
-    eigenvalues= np.linalg.eigvals(A)
+    eigenvalues = np.linalg.eigvals(A)
 
     return(eigenvalues)
 
