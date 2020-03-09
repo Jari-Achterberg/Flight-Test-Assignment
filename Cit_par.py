@@ -7,7 +7,7 @@ from math import pi, sin, cos
 
 # Stationary flight condition
 
-hp0    =       	      # pressure altitude in the stationary flight condition [m]
+hp0    =       	     # pressure altitude in the stationary flight condition [m]
 V0     =             # true airspeed in the stationary flight condition [m/sec]
 alpha0 =             # angle of attack in the stationary flight condition [rad]
 th0    =             # pitch angle in the stationary flight condition [rad]
@@ -21,24 +21,24 @@ CD0    =             # Zero lift drag coefficient [ ]
 CLa    =             # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma    =             # longitudinal stabilty [ ]
+Cma    =             # longitudinal stability [ ]
 Cmde   =             # elevator effectiveness [ ]
 
 
 # Aircraft geometry
 
-S      = 30.00	          # wing area [m^2]
-Sh     = 0.2 * S         # stabiliser area [m^2]
-Sh_S   = Sh / S	          # [ ]
-lh     = 0.71 * 5.968    # tail length [m]
-c      = 2.0569	          # mean aerodynamic cord [m]
-lh_c   = lh / c	          # [ ]
-b      = 15.911	          # wing span [m]
-bh     = 5.791	          # stabilser span [m]
-A      = b ** 2 / S      # wing aspect ratio [ ]
-Ah     = bh ** 2 / Sh    # stabilser aspect ratio [ ]
-Vh_V   = 1	          # [ ]
-ih     = -2 * pi / 180   # stabiliser angle of incidence [rad]
+S      = 30.00	            # wing area [m^2]
+Sh     = 0.2 * S            # stabiliser area [m^2]
+Sh_S   = Sh / S	            # [ ]
+lh     = 0.71 * 5.968       # tail length [m]
+c      = 2.0569	            # mean aerodynamic cord [m]
+lh_c   = lh / c	            # [ ]
+b      = 15.911	            # wing span [m]
+bh     = 5.791	            # stabiliser span [m]
+A      = b ** 2 / S         # wing aspect ratio [ ]
+Ah     = bh ** 2 / Sh       # stabiliser aspect ratio [ ]
+Vh_V   = 1	                # [ ]
+ih     = -2 * pi / 180      # stabiliser angle of incidence [rad]
 
 # Constant values concerning atmosphere and gravity
 
@@ -73,7 +73,7 @@ depsda = 4 / (A + 2)            # Downwash gradient [ ]
 CL = 2 * W / (rho * V0 ** 2 * S)              # Lift coefficient [ ]
 CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e) # Drag coefficient [ ]
 
-# Stabiblity derivatives
+# Stability derivatives
 
 CX0    = W * sin(th0) / (0.5 * rho * V0 ** 2 * S)
 CXu    = -0.02792
@@ -130,6 +130,10 @@ C3 = np.array([[CXde],
                [0],
                [Cmde]])
 
+### State Space Symmetric for state vector [u,alpha,theta,q]
+A_sym = -np.linalg.inv(C1)*C2
+B_sym = -np.linalg.inv(C1)*C3
+
 #---------Asymmetric equations of motion in the form of: D1 * xdot + D2 * x + D3 * u ----------------
 
 D1 = np.array([[(CYbdot-2*mub)*(b/V0),0,0,0],
@@ -147,4 +151,6 @@ D3 = np.array([[CYda,CYdr],
                [Clda,Cldr],
                [Cnda,Cndr]])
 
-#fdskj
+### State Space Asymmetric for state vector [beta, phi, p, r]
+A_asym = -np.linalg.inv(D1)*D2
+B_asym = -np.linalg.inv(D1)*D3
