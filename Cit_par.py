@@ -130,7 +130,7 @@ C3 = np.array([[CXde],
                [0],
                [Cmde]])
 
-### State Space Symmetric for state vector [u,alpha,theta,q].
+### State Space Symmetric for state vector [u,alpha,theta,q]
 A_sym = -np.linalg.inv(C1)*C2
 B_sym = -np.linalg.inv(C1)*C3
 
@@ -151,6 +151,6 @@ D3 = np.array([[CYda,CYdr],
                [Clda,Cldr],
                [Cnda,Cndr]])
 
-### State Space Asymmetric for state vector [beta, phi, p, r].
+### State Space Asymmetric for state vector [beta, phi, p, r]
 A_asym = -np.linalg.inv(D1)*D2
 B_asym = -np.linalg.inv(D1)*D3
