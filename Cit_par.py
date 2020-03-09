@@ -1,5 +1,6 @@
 # Citation 550 - Linear simulation
 
+from Verification import geteigenvalues
 import numpy as np
 from math import pi, sin, cos
 
