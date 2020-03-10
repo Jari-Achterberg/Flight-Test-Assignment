@@ -135,8 +135,8 @@ def statespacematrix(hp0,V0,alpha0,th0):
                    [Cmde]])
 
     ### State Space Symmetric for state vector [u,alpha,theta,q]
-    A_sym = np.dot(-np.linalg.inv(C1),C2)
-    B_sym = np.dot(-np.linalg.inv(C1),C3)
+    A_sym = -np.dot(np.linalg.inv(C1),C2)
+    B_sym = -np.dot(np.linalg.inv(C1),C3)
 
     #---------Asymmetric equations of motion in the form of: D1 * xdot + D2 * x + D3 * u ----------------
 
@@ -157,8 +157,8 @@ def statespacematrix(hp0,V0,alpha0,th0):
 
     ### State Space Asymmetric for state vector [beta, phi, p, r]
 
-    A_asym = np.dot(-np.linalg.inv(D1),D2)
-    B_asym = np.dot(-np.linalg.inv(D1),D3)
+    A_asym = -np.dot(np.linalg.inv(D1),D2)
+    B_asym = -np.dot(np.linalg.inv(D1),D3)
 
     return A_sym,B_sym,A_asym,B_asym
 '''
