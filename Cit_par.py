@@ -170,3 +170,5 @@ E_ = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
 R_ = B_*C_*D_-A_*D_**2-B_**2*E_
 
 print(A_, B_, C_, D_, E_, R_)'''
+
+#dasdf
