@@ -119,15 +119,15 @@ def statespacematrix(hp0,V0,alpha0,th0):
 
     #--------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
 
-    C1 = np.array([[(-2*muc*c)/(V0**2),0,0,0],
-    [0,(CZadot-2*muc)*(c/V0),0,0],
-    [0,0,-c/V0,0],
-    [0,(Cmadot*c)/V0,0,(-2*muc*c**2 * KY2)/(V0**2)]])
+    C1 = np.array([[(-2*muc*c)/(V0**2),0                    ,0    ,0],
+                   [0                 ,(CZadot-2*muc)*(c/V0),0    ,0],
+                   [0                 ,0                    ,-c/V0,0],
+                   [0                 ,(Cmadot*c)/V0        ,0    ,(-2*muc*c**2 * KY2)/(V0**2)]])
 
-    C2 = np.array([[CXu/V0,CXa,CZ0,CXq*(c/V0)],
+    C2 = np.array([[CXu/V0,CXa,CZ0 ,CXq*(c/V0)],
                    [CZu/V0,CZa,-CX0,(CZq+2*muc)*(c/V0)],
-                   [0,0,0,c/V0],
-                   [Cmu/V0,Cma,0,(Cmq*c)/V0]])
+                   [0     ,0  ,0   ,c/V0],
+                   [Cmu/V0,Cma,0   ,(Cmq*c)/V0]])
 
     C3 = np.array([[CXde],
                    [CZde],
