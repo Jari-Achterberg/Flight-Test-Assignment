@@ -72,15 +72,15 @@ def abc_formula(a, b, c):
 
 
 def get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky):
-    a = 2*mu_c*ky**2*(2*mu_c - cza_dot)
-    b = -2*mu_c*ky**2*cz_alpha - (2*mu_c + cz_q)*cm_alpha_dot - (2*mu_c-cza_dot)*cm_q
+    a = 2*mu_c*ky*(2*mu_c - cza_dot)
+    b = -2*mu_c*ky*cz_alpha - (2*mu_c + cz_q)*cm_alpha_dot - (2*mu_c-cza_dot)*cm_q
     c = cz_alpha*cm_q - (2*mu_c + cz_q)*cm_alpha
     eig_values = abc_formula(a, b, c)
     return eig_values
 
 
 def get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky):
-    a = -4*mu_c*ky**2
+    a = -4*mu_c*ky
     b = 2*mu_c*cx_u
     c = -cz_u*cz_0
     eig_values = abc_formula(a, b, c)
