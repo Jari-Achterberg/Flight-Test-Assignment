@@ -35,6 +35,6 @@ def State_Space_output(A_sym,B_sym,C,D):
     sys = ctrl.ss(A_sym,B_sym,C,D)
     return sys
 
-T, yout = ctrl.step_response(State_Space_output(A_sym,B_sym,C,D), T=None, X0=0.0, input=None, output=None, transpose=False, return_x=False)
+T, yout = ctrl.step_response(State_Space_output(A_sym,B_sym,C,D), T=np.arange(0, 250, 0.1))
 plt.plot(T,yout)
 plt.show()
