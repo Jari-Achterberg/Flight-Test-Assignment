@@ -3,6 +3,7 @@
 #from Verification import geteigenvalues
 import numpy as np
 from math import pi, sin, cos
+from Verification import get_short_period_eigenvalues,get_phugoid_eigenvalues,get_aperiodic_roll_eigenvalue,get_spiral_motion_eigenvalue,get_dutch_roll_with_aperiodic_roll_eigenvalues
 
 # xcg = 0.25 * c
 
@@ -170,3 +171,10 @@ E_ = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
 R_ = B_*C_*D_-A_*D_**2-B_**2*E_
 
 print(A_, B_, C_, D_, E_, R_)'''
+
+print("simplified short period",get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky))
+print("simplified phugoid",get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky))
+print("simplified aperiodic roll",get_aperiodic_roll_eigenvalue(cl_p, mu_b, kx))
+#print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
+print("simplified spiral",get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta, cn_p, mu_b))
+print("simplified Dutch roll",get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta))
