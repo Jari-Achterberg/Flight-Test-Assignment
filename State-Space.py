@@ -18,33 +18,50 @@ A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0,V0,alpha0,th0)     #Calling sta
 #-----------Importing matlab flight data-------------------
 
 mat_contents = sio.loadmat('FTISxprt-20200305_flight3.mat')
-#Format is the following
-elevator_dte = mat_contents['flightdata'][0][0][1][0][0][0]
+
+#Importing values from the matlab file
+elevator_dte = mat_contents['flightdata'][0][0][1][0][0][0]         #Deflection of the trim tab elevator in degree
 vane_AOA = mat_contents['flightdata'][0][0][0][0][0][0]
 time = mat_contents['flightdata'][0][0][-1][0][0][0]
 pitch_rate = mat_contents['flightdata'][0][0][27][0][0][0]
 pitch = mat_contents['flightdata'][0][0][22][0][0][0]
+deltae = mat_contents['flightdata'][0][0][17][0][0][0]               #Deflection of the elevator in degree
 
 plt.figure()
-plt.plot(time.T,vane_AOA)
+plt.plot(time.T,pitch)
 plt.show()
 #---------------------------------------------------------
 
 #Phugoid
-#C = A_sym[2,:]
-#D = B_sym[2,:]
-C = np.array([0,0,1,0])
-D = np.array([0])
 
-def State_Space_output(A_sym,B_sym,C,D):
-    sys = ctrl.ss(A_sym,B_sym,C,D)
-    return sys
+#Generating an output vector with pitch angle and pitch rate
+C = np.array([[1,0,0,0],
+              [0,1,0,0],
+              [0,0,1,0],
+              [0,0,0,1]])
+D = np.array([[0],
+              [0],
+              [0],
+              [0]])
 
-sys = State_Space_output(A_sym,B_sym,C,D)
+sys = ctrl.ss(A_sym,B_sym,C,D)
 ctrl.damp(sys)
 
-T, yout = ctrl.step_response(State_Space_output(A_sym,B_sym,C,D), T=np.arange(0,200,0.1), X0=0.0)
+#Getting the output parameters for a step input
 
-plt.figure()
-plt.plot(T,yout)
-plt.show()
+T, u_sim = ctrl.step_response(sys, T=np.arange(0,600,0.1), X0=0.0, output=0)
+T, aoa_sim = ctrl.step_response(sys, T=np.arange(0,600,0.1), X0=0.0, output=1)
+T, pitch_sim = ctrl.step_response(sys, T=np.arange(0,600,0.1), X0=0.0, output=2)
+T, pitch_rate_sim = ctrl.step_response(sys, T=np.arange(0,600,0.1), X0=0.0, output=3)
+
+plt.figure(1)
+plt.subplot(2,2,1)
+plt.plot(T, pitch_sim)
+plt.xlabel('Kutje')
+plt.subplot(2,2,2)
+plt.plot(T, pitch_rate_sim)
+plt.subplot(2,2,3)
+plt.plot(T, u_sim)
+plt.subplot(2,2,4)
+plt.plot(T, aoa_sim)
+plt.show(1)

@@ -114,7 +114,8 @@ Cndr   =  -0.0939
 test = get_phugoid_eigenvalues(CXu,CZu,muc,CZ0,KY2)
 print(test)
 
-'''
+#Parameter test
+
 A_ = 4*muc**2*KY2*(CZadot-2*muc)
 B_ = Cmadot*2*muc*(CZq+2*muc) - Cmq*2*muc*(CZadot-2*muc)- 2*muc*KY2*(CXu*(CZadot-2*muc)-2*muc*CZa)
 C_ = Cma*2*muc*(CZq+2*muc)-Cmadot*(2*muc*CX0+CXu*(CZq+2*muc))+Cmq*(CXu*(CZadot-2*muc)-2*muc*CZa)+2*muc*KY2*(CXa*CZu-CZa*CXu)
@@ -122,4 +123,4 @@ D_ = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cm
 E_ = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
 R_ = B_*C_*D_-A_*D_**2-B_**2*E_
 
-print(A_, B_, C_, D_, E_, R_)'''
+print(A_, B_, C_, D_, E_, R_)

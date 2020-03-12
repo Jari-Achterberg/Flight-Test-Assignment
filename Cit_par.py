@@ -81,7 +81,7 @@ def statespacematrix(hp0,V0,alpha0,th0):
 
     CX0    = W * sin(th0) / (0.5 * rho * V0 ** 2 * S)
     CXu    = -0.02792
-    CXa    = +0.47966		# Positive! (has been erroneously negative since 1993)
+    CXa    = -0.47966		# Positive! (has been erroneously negative since 1993)
     CXadot = +0.08330
     CXq    = -0.28170
     CXde   = -0.03728
@@ -161,14 +161,7 @@ def statespacematrix(hp0,V0,alpha0,th0):
     B_asym = -np.dot(np.linalg.inv(D1),D3)
 
     return A_sym,B_sym,A_asym,B_asym
-'''
-A_ = 4*muc**2*KY2*(CZadot-2*muc)
-B_ = Cmadot*2*muc*(CZq+2*muc) - Cmq*2*muc*(CZadot-2*muc)- 2*muc*KY2*(CXu*(CZadot-2*muc)-2*muc*CZa)
-C_ = Cma*2*muc*(CZq+2*muc)-Cmadot*(2*muc*CX0+CXu*(CZq+2*muc))+Cmq*(CXu*(CZadot-2*muc)-2*muc*CZa)+2*muc*KY2*(CXa*CZu-CZa*CXu)
-D_ = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cmadot*(CX0*CXu-CZ0*CZu)+Cmq*(CXu*CZa-CZu*CXa)
-E_ = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
-R_ = B_*C_*D_-A_*D_**2-B_**2*E_
 
-print(A_, B_, C_, D_, E_, R_)'''
 
-#dasdf
+
+
