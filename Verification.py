@@ -123,4 +123,3 @@ A = np.matrix([[1, 2, 3], [5, 6, 7], [2, -1, 3]])
 
 print("using numpy function: ", get_eigenvalues(A))
 print("using own function: ", abcd_formula(get_coefficients_3x3_matrix(A)[0], get_coefficients_3x3_matrix(A)[1], get_coefficients_3x3_matrix(A)[2], get_coefficients_3x3_matrix(A)[3]))
-
