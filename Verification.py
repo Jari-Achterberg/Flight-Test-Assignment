@@ -87,6 +87,37 @@ def get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky):
     return eig_values
 
 
+def get_aperiodic_roll_eigenvalue(cl_p, mu_b, kx):
+    # kx is assumed to be squared already
+    lambda_1 = cl_p/(4*mu_b*kx)
+    return lambda_1
+
+
+def get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta):
+    # kz is assumed to be squared already
+    a = 8*mu_b**2*kz
+    b = -2*mu_b*(cn_r + 2*kz*cy_beta)
+    c = 4*mu_b*cn_beta + cy_beta*cn_r
+    eig_values = abc_formula(a, b, c)
+    return eig_values
+
+
+def get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta, cn_p, mu_b):
+    ##
+    lambda_2 = (2*cl*(cl_beta*cn_r - cn_beta*cl_r))/(cl_p*(cy_beta*cn_r + 4*mu_b*cn_beta) - cn_p*(cy_beta*cl_r + 4*mu_b*cl_beta))
+    return lambda_2
+
+
+def get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta):
+    ##
+    a = 4*mu_b**2*(kx*kz - kxz)
+    b = -mu_b*((cl_r + cn_p)*kxz + cn_r*kx + cl_p*kz)
+    c = 2*mu_b*(cl_beta*kxz + cn_beta*kx) + 0.25*(cl_p*cn_r - cn_p*cl_r)
+    d = 0.5*(cl_beta*cn_p - cn_beta*cl_p)
+    eig_values = abcd_formula(a, b, c, d)
+    return eig_values
+
+
 A = np.matrix([[1, 2, 3], [5, 6, 7], [2, -1, 3]])
 # A = np.matrix([[1, 0, 0], [0, 2, 3], [0, 6, 5]])
 
