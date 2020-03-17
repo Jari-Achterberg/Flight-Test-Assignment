@@ -13,7 +13,7 @@ th0    =  0.08           # pitch angle in the stationary flight condition [rad]
 # Aircraft mass
 m      = 10000            # mass [kg]
 
-A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0,V0,alpha0,th0)     #Calling state space matrix
+A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0,V0,alpha0,th0, False)     #Calling state space matrix
 
 #-----------Importing matlab flight data-------------------
 

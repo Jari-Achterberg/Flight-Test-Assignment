@@ -1,12 +1,12 @@
 # Citation 550 - Linear simulation
 
-#from Verification import geteigenvalues
+# from Verification import get eigenvalues
 import numpy as np
 from math import pi, sin, cos
+from matplotlib import pyplot as plt
 from Verification import get_short_period_eigenvalues,get_phugoid_eigenvalues,get_aperiodic_roll_eigenvalue,get_spiral_motion_eigenvalue,get_dutch_roll_with_aperiodic_roll_eigenvalues
 
 # xcg = 0.25 * c
-
 # Stationary flight condition
 
 hp0    = 1500      	     # pressure altitude in the stationary flight condition [m]
@@ -16,9 +16,10 @@ th0    =  0.08           # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
 m      = 10000            # mass [kg]
+# Definition returns the state space matrix for both the symmetric as asymmetric case
 
-#Definition returns the state space matrix for both the symmetric as asymmetric case
-def statespacematrix(hp0,V0,alpha0,th0):
+
+def statespacematrix(hp0, V0, alpha0, th0, plot):
 
     # aerodynamic properties (from table C)
     e      = 0.8                # Oswald factor [ ]
@@ -28,7 +29,6 @@ def statespacematrix(hp0,V0,alpha0,th0):
     # Longitudinal stability (from table C)
     Cma    = -0.5626            # longitudinal stability [ ]
     Cmde   = -1.1642            # elevator effectiveness [ ]
-
 
     # Aircraft geometry
 
@@ -68,20 +68,20 @@ def statespacematrix(hp0,V0,alpha0,th0):
 
     # Aerodynamic constants
 
-    Cmac   = 0                      # Moment coefficient about the aerodynamic centre [ ]
-    CNwa   = CLa                    # Wing normal force slope [ ]
-    CNha   = 2 * pi * Ah / (Ah + 2) # Stabiliser normal force slope [ ]
-    depsda = 4 / (A + 2)            # Downwash gradient [ ]
+    Cmac   = 0                       # Moment coefficient about the aerodynamic centre [ ]
+    CNwa   = CLa                     # Wing normal force slope [ ]
+    CNha   = 2 * pi * Ah / (Ah + 2)  # Stabiliser normal force slope [ ]
+    depsda = 4 / (A + 2)             # Downwash gradient [ ]
 
     # Lift and drag coefficient
 
-    CL = 2 * W / (rho * V0 ** 2 * S)              # Lift coefficient [ ]
-    CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e) # Drag coefficient [ ]
+    CL = 2 * W / (rho * V0 ** 2 * S)               # Lift coefficient [ ]
+    CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e)  # Drag coefficient [ ]
 
     # Stability derivatives
 
     CX0    = W * sin(th0) / (0.5 * rho * V0 ** 2 * S)
-    CXu    = -0.02792
+    CXu = - 0.095 # CXu    = -0.02792
     CXa    = +0.47966		# Positive! (has been erroneously negative since 1993)
     CXadot = +0.08330
     CXq    = -0.28170
@@ -118,7 +118,38 @@ def statespacematrix(hp0,V0,alpha0,th0):
     Cnda   =  -0.0120
     Cndr   =  -0.0939
 
-    #--------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
+    # ----------------------------------Eigenvalue Verification ---------------------------------------
+    # print("simplified short period",
+    eig_values_list = get_short_period_eigenvalues(CZa, CZadot, muc, CZq, Cma, Cmadot, Cmq, KY2)
+
+    # print("simplified phugoid",
+    eig_values_list.append(get_phugoid_eigenvalues(CXu, CZu, muc, CZ0, KY2)[0])
+    eig_values_list.append(get_phugoid_eigenvalues(CXu, CZu, muc, CZ0, KY2)[1])
+
+    # print("simplified aperiodic roll",
+    eig_values_list.append(get_aperiodic_roll_eigenvalue(Clp, mub, KX2))
+    # print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
+    # print("simplified spiral",
+    eig_values_list.append(get_spiral_motion_eigenvalue(CL, Clb, Cnb, Clr, Cnr, Clp, CYb, Cnp, mub))
+    # print("simplified Dutch roll",
+
+    dutch_roll_eigenvalues = get_dutch_roll_with_aperiodic_roll_eigenvalues(mub, KX2, KZ2, KXZ, Clr, Cnp, Cnr, Clp, Clb, Cnb)
+    eig_values_list.append(dutch_roll_eigenvalues[0])
+    eig_values_list.append(dutch_roll_eigenvalues[1])
+    eig_values_list.append(dutch_roll_eigenvalues[2])
+
+    real = [x.real for x in eig_values_list]
+    imag = [x.imag for x in eig_values_list]
+
+    colors = [0, 0, 10, 10, 20, 30, 40, 40, 40]
+    if plot:
+        plt.scatter(real, imag, c=colors, cmap='jet')
+        plt.title("Eigenvalues of all modes")
+        plt.ylabel("imaginary")
+        plt.xlabel("real")
+        plt.show()
+
+    # --------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
 
     C1 = np.array([[(-2*muc*c)/(V0**2),0                    ,0    ,0],
                    [0                 ,(CZadot-2*muc)*(c/V0),0    ,0],
@@ -135,11 +166,11 @@ def statespacematrix(hp0,V0,alpha0,th0):
                    [0],
                    [Cmde]])
 
-    ### State Space Symmetric for state vector [u,alpha,theta,q]
-    A_sym = np.dot(-np.linalg.inv(C1),C2)
-    B_sym = np.dot(-np.linalg.inv(C1),C3)
+    # State Space Symmetric for state vector [u,alpha,theta,q]
+    A_sym = np.dot(-np.linalg.inv(C1), C2)
+    B_sym = np.dot(-np.linalg.inv(C1), C3)
 
-    #---------Asymmetric equations of motion in the form of: D1 * xdot + D2 * x + D3 * u ----------------
+    # ---------Asymmetric equations of motion in the form of: D1 * x_dot + D2 * x + D3 * u ----------------
 
     D1 = np.array([[(CYbdot-2*mub)*(b/V0),0,0,0],
                    [0,-b/(2*V0),0,0],
@@ -156,12 +187,15 @@ def statespacematrix(hp0,V0,alpha0,th0):
                    [Clda,Cldr],
                    [Cnda,Cndr]])
 
-    ### State Space Asymmetric for state vector [beta, phi, p, r]
+    # State Space Asymmetric for state vector [beta, phi, p, r]
+    A_asym = np.dot(-np.linalg.inv(D1), D2)
+    B_asym = np.dot(-np.linalg.inv(D1), D3)
 
-    A_asym = np.dot(-np.linalg.inv(D1),D2)
-    B_asym = np.dot(-np.linalg.inv(D1),D3)
+    return A_sym, B_sym, A_asym, B_asym
 
-    return A_sym,B_sym,A_asym,B_asym
+
+a = statespacematrix(hp0,V0,alpha0,th0, True)
+
 '''
 A_ = 4*muc**2*KY2*(CZadot-2*muc)
 B_ = Cmadot*2*muc*(CZq+2*muc) - Cmq*2*muc*(CZadot-2*muc)- 2*muc*KY2*(CXu*(CZadot-2*muc)-2*muc*CZa)
@@ -172,9 +206,10 @@ R_ = B_*C_*D_-A_*D_**2-B_**2*E_
 
 print(A_, B_, C_, D_, E_, R_)'''
 
-print("simplified short period",get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky))
-print("simplified phugoid",get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky))
-print("simplified aperiodic roll",get_aperiodic_roll_eigenvalue(cl_p, mu_b, kx))
-#print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
-print("simplified spiral",get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta, cn_p, mu_b))
-print("simplified Dutch roll",get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta))
+
+# print("simplified short period",get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky))
+# print("simplified phugoid",get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky))
+# print("simplified aperiodic roll",get_aperiodic_roll_eigenvalue(cl_p, mu_b, kx))
+# print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
+# print("simplified spiral",get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta, cn_p, mu_b))
+# print("simplified Dutch roll",get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta))
