@@ -36,12 +36,16 @@ def abcd_formula(a, b, c, d):
     ##
     # solve 27 z^2 + 27 qz - p^3 = 0 to get z
     z = abc_formula(27, 27*q, -p**3)
+    print(z)
     # get r and phi from general solution
     r, phi = cmath.polar(z[0])
     # convert back to m using a general formula
     m1 = r**(1/3)*(np.cos(phi/3) - 1j*np.sin(phi/3))
-    m2 = r**(1/3)*(np.cos((2*np.pi + phi)/3) - 1j*np.sin((2*np.pi + phi)/3))
-    m3 = r**(1/3)*(np.cos((4*np.pi + phi)/3) - 1j*np.sin((4*np.pi + phi)/3))
+    m2 = r**(1/3)*(np.cos((2*np.pi + phi)/3) + 1j*np.sin((2*np.pi + phi)/3))
+    m3 = r**(1/3)*(np.cos((4*np.pi + phi)/3) + 1j*np.sin((4*np.pi + phi)/3))
+    print("m1: ", m1)
+    print("m2: ", m2)
+    print("m3: ", m3)
     n1 = -p/(3*m1)
     n2 = -p/(3*m2)
     n3 = -p/(3*m3)
@@ -52,6 +56,7 @@ def abcd_formula(a, b, c, d):
     x2 = y2 - bb/3
     x3 = y3 - bb/3
 
+    print(x1, x2, x3)
     return x1, x2, x3
 
 
