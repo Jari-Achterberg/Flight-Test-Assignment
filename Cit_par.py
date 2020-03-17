@@ -120,31 +120,29 @@ def statespacematrix(hp0, V0, alpha0, th0, plot):
 
     # ----------------------------------Eigenvalue Verification ---------------------------------------
     # print("simplified short period",
-    eig_values_list = get_short_period_eigenvalues(CZa, CZadot, muc, CZq, Cma, Cmadot, Cmq, KY2)
+    sp = get_short_period_eigenvalues(CZa, CZadot, muc, CZq, Cma, Cmadot, Cmq, KY2)
 
     # print("simplified phugoid",
-    eig_values_list.append(get_phugoid_eigenvalues(CXu, CZu, muc, CZ0, KY2)[0])
-    eig_values_list.append(get_phugoid_eigenvalues(CXu, CZu, muc, CZ0, KY2)[1])
+    phug = get_phugoid_eigenvalues(CXu, CZu, muc, CZ0, KY2)
 
     # print("simplified aperiodic roll",
-    eig_values_list.append(get_aperiodic_roll_eigenvalue(Clp, mub, KX2))
+    aperiodic = [get_aperiodic_roll_eigenvalue(Clp, mub, KX2)]
     # print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
     # print("simplified spiral",
-    eig_values_list.append(get_spiral_motion_eigenvalue(CL, Clb, Cnb, Clr, Cnr, Clp, CYb, Cnp, mub))
+    spiral = [get_spiral_motion_eigenvalue(CL, Clb, Cnb, Clr, Cnr, Clp, CYb, Cnp, mub)]
     # print("simplified Dutch roll",
 
-    dutch_roll_eigenvalues = get_dutch_roll_with_aperiodic_roll_eigenvalues(mub, KX2, KZ2, KXZ, Clr, Cnp, Cnr, Clp, Clb, Cnb)
-    eig_values_list.append(dutch_roll_eigenvalues[0])
-    eig_values_list.append(dutch_roll_eigenvalues[1])
-    eig_values_list.append(dutch_roll_eigenvalues[2])
+    dutch_roll = get_dutch_roll_with_aperiodic_roll_eigenvalues(mub, KX2, KZ2, KXZ, Clr, Cnp, Cnr, Clp, Clb, Cnb)
 
-    real = [x.real for x in eig_values_list]
-    imag = [x.imag for x in eig_values_list]
-
-    colors = [0, 0, 10, 10, 20, 30, 40, 40, 40]
     if plot:
-        plt.scatter(real, imag, c=colors, cmap='jet')
+        plt.scatter([x.real for x in sp], [x.imag for x in sp], color='r', marker='x')
+        plt.scatter([x.real for x in phug], [x.imag for x in phug], color='b', marker='x')
+        plt.scatter([x.real for x in aperiodic], [x.imag for x in aperiodic], color='y', marker='x')
+        plt.scatter([x.real for x in spiral], [x.imag for x in spiral], color='g', marker='x')
+        plt.scatter([x.real for x in dutch_roll], [x.imag for x in dutch_roll], color='c', marker='x')
         plt.title("Eigenvalues of all modes")
+        plt.grid()
+        plt.legend(labels=['short period', 'phugoid', 'aperiodic roll', 'spiral', '"special" dutch roll '])
         plt.ylabel("imaginary")
         plt.xlabel("real")
         plt.show()
