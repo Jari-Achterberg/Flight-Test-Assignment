@@ -110,7 +110,7 @@ def get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta
 
 def get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta):
     ##
-    a = 4*mu_b**2*(kx*kz - kxz)
+    a = 4*mu_b**2*(kx*kz - kxz**2)
     b = -mu_b*((cl_r + cn_p)*kxz + cn_r*kx + cl_p*kz)
     c = 2*mu_b*(cl_beta*kxz + cn_beta*kx) + 0.25*(cl_p*cn_r - cn_p*cl_r)
     d = 0.5*(cl_beta*cn_p - cn_beta*cl_p)
