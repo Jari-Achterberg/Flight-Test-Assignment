@@ -135,17 +135,19 @@ def statespacematrix(hp0, V0, alpha0, th0, plot):
     dutch_roll = get_dutch_roll_with_aperiodic_roll_eigenvalues(mub, KX2, KZ2, KXZ, Clr, Cnp, Cnr, Clp, Clb, Cnb)
 
     if plot:
-        plt.scatter([x.real for x in sp], [x.imag for x in sp], color='r', marker='x')
-        plt.scatter([x.real for x in phug], [x.imag for x in phug], color='b', marker='x')
-        plt.scatter([x.real for x in aperiodic], [x.imag for x in aperiodic], color='y', marker='x')
-        plt.scatter([x.real for x in spiral], [x.imag for x in spiral], color='g', marker='x')
-        plt.scatter([x.real for x in dutch_roll], [x.imag for x in dutch_roll], color='c', marker='x')
+        plt.figure(figsize=(10, 5))
+        plt.subplot(121)
+        plt.scatter([x.real*V0/c for x in sp], [x.imag*V0/c for x in sp], color='r', marker='x')
+        plt.scatter([x.real*V0/c for x in phug], [x.imag*V0/c for x in phug], color='b', marker='x')
+        plt.scatter([x.real*V0/b for x in aperiodic], [x.imag*V0/b for x in aperiodic], color='y', marker='x')
+        plt.scatter([x.real*V0/b for x in spiral], [x.imag*V0/b for x in spiral], color='g', marker='x')
+        plt.scatter([x.real*V0/b for x in dutch_roll], [x.imag*V0/b for x in dutch_roll], color='c', marker='x')
         plt.title("Eigenvalues of simplified models")
         plt.grid()
         plt.legend(labels=['short period', 'phugoid', 'aperiodic roll', 'spiral', '"special" dutch roll '])
         plt.ylabel("imaginary")
         plt.xlabel("real")
-        plt.show()
+        #plt.show()
 
 
 
@@ -200,7 +202,7 @@ a = statespacematrix(hp0,V0,alpha0,th0, True)
 eigenvalues_sym = get_eigenvalues(a[0])
 eigenvalues_asym = get_eigenvalues(a[2])
 
-
+plt.subplot(122)
 plt.scatter([x.real for x in eigenvalues_sym[0:2]], [x.imag for x in eigenvalues_sym[0:2]], color='r', marker='x')
 plt.scatter([x.real for x in eigenvalues_sym[2:4]], [x.imag for x in eigenvalues_sym[2:4]], color='b', marker='x')
 plt.scatter([x.real for x in eigenvalues_asym[0:1]], [x.imag for x in eigenvalues_asym[0:1]], color='y', marker='x')
