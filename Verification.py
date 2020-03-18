@@ -84,8 +84,8 @@ def get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alp
     return eig_values
 
 
-def get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky):
-    a = -4*mu_c*ky
+def get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0):
+    a = -4*mu_c**2
     b = 2*mu_c*cx_u
     c = -cz_u*cz_0
     eig_values = abc_formula(a, b, c)
