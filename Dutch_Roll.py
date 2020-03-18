@@ -121,3 +121,6 @@ plt.legend(['Simulation','Dutch Roll Flight', 'Dutch Roll Yaw Damper'], loc=4)
 plt.ylabel('Yaw rate [degree/s]')
 plt.xlabel('Time [s]')
 plt.show(2)
+
+
+#fgh
