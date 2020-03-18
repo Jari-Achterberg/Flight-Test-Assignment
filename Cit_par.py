@@ -17,7 +17,7 @@ th0    =  0.08           # pitch angle in the stationary flight condition [rad]
 m      = 10000            # mass [kg]
 
 #Definition returns the state space matrix for both the symmetric as asymmetric case
-def statespacematrix(hp0,V0,alpha0,th0):
+def statespacematrix(hp0,V0,alpha0,th0,m):
 
     # aerodynamic properties (from table C)
     e      = 0.8                # Oswald factor [ ]
