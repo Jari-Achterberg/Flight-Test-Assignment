@@ -36,12 +36,16 @@ def abcd_formula(a, b, c, d):
     ##
     # solve 27 z^2 + 27 qz - p^3 = 0 to get z
     z = abc_formula(27, 27*q, -p**3)
+    print(z)
     # get r and phi from general solution
     r, phi = cmath.polar(z[0])
     # convert back to m using a general formula
     m1 = r**(1/3)*(np.cos(phi/3) - 1j*np.sin(phi/3))
-    m2 = r**(1/3)*(np.cos((2*np.pi + phi)/3) - 1j*np.sin((2*np.pi + phi)/3))
-    m3 = r**(1/3)*(np.cos((4*np.pi + phi)/3) - 1j*np.sin((4*np.pi + phi)/3))
+    m2 = r**(1/3)*(np.cos((2*np.pi + phi)/3) + 1j*np.sin((2*np.pi + phi)/3))
+    m3 = r**(1/3)*(np.cos((4*np.pi + phi)/3) + 1j*np.sin((4*np.pi + phi)/3))
+    print("m1: ", m1)
+    print("m2: ", m2)
+    print("m3: ", m3)
     n1 = -p/(3*m1)
     n2 = -p/(3*m2)
     n3 = -p/(3*m3)
@@ -52,6 +56,7 @@ def abcd_formula(a, b, c, d):
     x2 = y2 - bb/3
     x3 = y3 - bb/3
 
+    print(x1, x2, x3)
     return x1, x2, x3
 
 
@@ -79,8 +84,8 @@ def get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alp
     return eig_values
 
 
-def get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky):
-    a = -4*mu_c*ky
+def get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0):
+    a = -4*mu_c**2
     b = 2*mu_c*cx_u
     c = -cz_u*cz_0
     eig_values = abc_formula(a, b, c)
@@ -110,20 +115,19 @@ def get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta
 
 def get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta):
     ##
-    a = 4*mu_b**2*(kx*kz - kxz)
+    a = 4*mu_b**2*(kx*kz - kxz**2)
     b = -mu_b*((cl_r + cn_p)*kxz + cn_r*kx + cl_p*kz)
     c = 2*mu_b*(cl_beta*kxz + cn_beta*kx) + 0.25*(cl_p*cn_r - cn_p*cl_r)
     d = 0.5*(cl_beta*cn_p - cn_beta*cl_p)
     eig_values = abcd_formula(a, b, c, d)
     return eig_values
 
-print("simplified short period",get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky))
-print("simplified phugoid",get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky))
-print("simplified aperiodic roll",get_aperiodic_roll_eigenvalue(cl_p, mu_b, kx))
-#print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
-print("simplified spiral",get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta, cn_p, mu_b))
-print("simplified Dutch roll",get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta))
-
+# print("simplified short period",get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky))
+# print("simplified phugoid",get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky))
+# print("simplified aperiodic roll",get_aperiodic_roll_eigenvalue(cl_p, mu_b, kx))
+# print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
+# print("simplified spiral",get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta, cn_p, mu_b))
+# print("simplified Dutch roll",get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta))
 
 
 """
