@@ -123,7 +123,7 @@ def statespacematrix(hp0, V0, alpha0, th0, plot):
     sp = get_short_period_eigenvalues(CZa, CZadot, muc, CZq, Cma, Cmadot, Cmq, KY2)
 
     # print("simplified phugoid",
-    phug = get_phugoid_eigenvalues(CXu, CZu, muc, CZ0, KY2)
+    phug = get_phugoid_eigenvalues(CXu, CZu, muc, CZ0)
 
     # print("simplified aperiodic roll",
     aperiodic = [get_aperiodic_roll_eigenvalue(Clp, mub, KX2)]
