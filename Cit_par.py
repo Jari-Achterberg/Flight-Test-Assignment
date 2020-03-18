@@ -140,7 +140,7 @@ def statespacematrix(hp0, V0, alpha0, th0, plot):
         plt.scatter([x.real for x in aperiodic], [x.imag for x in aperiodic], color='y', marker='x')
         plt.scatter([x.real for x in spiral], [x.imag for x in spiral], color='g', marker='x')
         plt.scatter([x.real for x in dutch_roll], [x.imag for x in dutch_roll], color='c', marker='x')
-        plt.title("Eigenvalues of all modes")
+        plt.title("Eigenvalues of simplified models")
         plt.grid()
         plt.legend(labels=['short period', 'phugoid', 'aperiodic roll', 'spiral', '"special" dutch roll '])
         plt.ylabel("imaginary")
