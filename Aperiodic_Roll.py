@@ -22,13 +22,12 @@ yawrate = mat_contents['flightdata'][0][0][28][0][0][0]                 #Body ya
 Pressure_Altitude = Pressure_Altitude * 0.3048                          #Pressure altitude in m
 Vtrue = Vtrue * 0.51444444444444444                                     #True airspeed in m/s
 
-#---------------------Dutch roll------------------------------
+#---------------------Aperiod roll------------------------------
 
-#We have a pulse shaped rudder deflection on t = 2792 [s] for dutch roll
-#We have a pulse shaped rudder deflection on t = 2837 [s] for dutch roll with yaw damper
+#We have a pulse shaped aileron deflection on t = 2915 [s] for aperiodic roll
 
-startvalue =27830                   #Starts at index 25360
-endvalue = 28230                    #We want to see ... seconds after start
+startvalue =29060                   #Starts at index 29060
+endvalue = 29460                    #We want to see 40 seconds after start
 
 # Stationary flight condition
 hp0    = Pressure_Altitude[startvalue]      # pressure altitude in the stationary flight condition [m]
@@ -45,8 +44,8 @@ xinit = np.array([0,0,0,0])
 #xinit = np.array([0,rollangle[startvalue]*(np.pi/180),rollrate[startvalue]*(np.pi/180),yawrate[startvalue]*(np.pi/180)])
 
 #Input from the rudder and aileron
-Udeltar = deltar[startvalue:endvalue]*(np.pi/180)
-Udeltaa = deltaa[startvalue:endvalue]*(np.pi/180)
+Udeltar = -deltar[startvalue:endvalue]*(np.pi/180)      #Minus because of other sign convention?
+Udeltaa = -deltaa[startvalue:endvalue]*(np.pi/180)      #Minus because of other sign convention?
 
 #Generating an output vector with sideslip
 
@@ -87,38 +86,30 @@ T, yawrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,40,0.1), U=np.con
 yawrate_sim = yawrate_sim*(180/np.pi)                   #from radians/s to degree/s
 yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial condition
 
-#T, yawrate_sim1= ctrl.impulse_response(sys, T=np.arange(0,40,0.1), X0=xinit)
-
-#----------------------------Dutch roll with yaw damping--------------------------------
-
-startvalue1 = 27280
-endvalue1 = 27680
-
-plt.figure(2)
-plt.title('Response curves for a pulse-shaped rudder deflection, dutch roll')
+plt.figure(1)
+plt.title('Response curves for a pulse-shaped aileron deflection, aperiodic roll')
 plt.subplot(2,2,1)
 plt.plot(T, sideslip_sim)
 plt.grid()
-plt.legend(['Simulation','Dutch Roll Flight', 'Dutch Roll Yaw Damper'],loc=4)
+plt.legend(['Simulation','Flight Data'],loc=4)
 plt.ylabel('Side slip [degree]')
 plt.xlabel('Time [s]')
 plt.subplot(2,2,2)
-plt.plot(T, rollangle_sim, T, rollangle[startvalue:endvalue], T, rollangle[startvalue1:endvalue1])
+plt.plot(T, rollangle_sim, T, rollangle[startvalue:endvalue])
 plt.grid()
-plt.legend(['Simulation','Dutch Roll Flight', 'Dutch Roll Yaw Damper'],loc=4)
+plt.legend(['Simulation','Flight Data'],loc=4)
 plt.ylabel('Roll angle [degree]')
 plt.xlabel('Time [s]')
 plt.subplot(2,2,3)
-plt.plot(T, rollrate_sim, T, rollrate[startvalue:endvalue], T, rollrate[startvalue1:endvalue1])
+plt.plot(T, rollrate_sim, T, rollrate[startvalue:endvalue])
 plt.grid()
-plt.legend(['Simulation','Dutch Roll Flight', 'Dutch Roll Yaw Damper'],loc=4)
+plt.legend(['Simulation','Flight Data'],loc=4)
 plt.ylabel('Roll rate [degree/s]')
 plt.xlabel('Time [s]')
 plt.subplot(2,2,4)
-plt.plot(T, yawrate_sim, T, yawrate[startvalue:endvalue], T, yawrate[startvalue1:endvalue1])
+plt.plot(T, yawrate_sim, T, yawrate[startvalue:endvalue])
 plt.grid()
-plt.legend(['Simulation','Dutch Roll Flight', 'Dutch Roll Yaw Damper'], loc=4)
+plt.legend(['Simulation','Flight Data'], loc=4)
 plt.ylabel('Yaw rate [degree/s]')
 plt.xlabel('Time [s]')
-plt.show(2)
-
+plt.show(1)
