@@ -113,3 +113,5 @@ plt.legend(['Simulation','Flight Data'], loc=4)
 plt.ylabel('Yaw rate [degree/s]')
 plt.xlabel('Time [s]')
 plt.show(1)
+
+#sd
