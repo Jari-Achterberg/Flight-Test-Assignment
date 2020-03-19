@@ -195,23 +195,26 @@ def statespacematrix(hp0,V0,alpha0,th0,m, plot):
 
     return A_sym,B_sym,A_asym,B_asym
 
-a = statespacematrix(hp0,V0,alpha0,th0,m, True)
 
-eigenvalues_sym = get_eigenvalues(a[0])
-eigenvalues_asym = get_eigenvalues(a[2])
+plot = False
+if plot:
+    a = statespacematrix(hp0,V0,alpha0,th0,m, True)
 
-plt.subplot(122)
-plt.scatter([x.real for x in eigenvalues_sym[0:2]], [x.imag for x in eigenvalues_sym[0:2]], color='r', marker='x')
-plt.scatter([x.real for x in eigenvalues_sym[2:4]], [x.imag for x in eigenvalues_sym[2:4]], color='b', marker='x')
-plt.scatter([x.real for x in eigenvalues_asym[0:1]], [x.imag for x in eigenvalues_asym[0:1]], color='y', marker='x')
-plt.scatter([x.real for x in eigenvalues_asym[3:4]], [x.imag for x in eigenvalues_asym[3:4]], color='g', marker='x')
-plt.scatter([x.real for x in eigenvalues_asym[1:3]], [x.imag for x in eigenvalues_asym[1:3]], color='c', marker='x')
-plt.title("Eigenvalues of total models")
-plt.grid()
-plt.legend(labels=['short period', 'phugoid', 'aperiodic roll', 'spiral', 'dutch roll '])
-plt.ylabel("imaginary")
-plt.xlabel("real")
-plt.show()
+    eigenvalues_sym = get_eigenvalues(a[0])
+    eigenvalues_asym = get_eigenvalues(a[2])
+
+    plt.subplot(122)
+    plt.scatter([x.real for x in eigenvalues_sym[0:2]], [x.imag for x in eigenvalues_sym[0:2]], color='r', marker='x')
+    plt.scatter([x.real for x in eigenvalues_sym[2:4]], [x.imag for x in eigenvalues_sym[2:4]], color='b', marker='x')
+    plt.scatter([x.real for x in eigenvalues_asym[0:1]], [x.imag for x in eigenvalues_asym[0:1]], color='y', marker='x')
+    plt.scatter([x.real for x in eigenvalues_asym[3:4]], [x.imag for x in eigenvalues_asym[3:4]], color='g', marker='x')
+    plt.scatter([x.real for x in eigenvalues_asym[1:3]], [x.imag for x in eigenvalues_asym[1:3]], color='c', marker='x')
+    plt.title("Eigenvalues of total models")
+    plt.grid()
+    plt.legend(labels=['short period', 'phugoid', 'aperiodic roll', 'spiral', 'dutch roll '])
+    plt.ylabel("imaginary")
+    plt.xlabel("real")
+    plt.show()
 
 '''
 A_ = 4*muc**2*KY2*(CZadot-2*muc)
