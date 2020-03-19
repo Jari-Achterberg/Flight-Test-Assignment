@@ -19,7 +19,7 @@ th0    =  0.08           # pitch angle in the stationary flight condition [rad]
 m      = 10000            # mass [kg]
 
 #Definition returns the state space matrix for both the symmetric as asymmetric case
-def statespacematrix(hp0,V0,alpha0,th0,m, plot):
+def statespacematrix(hp0,V0,alpha0,th0,m):
 
     # aerodynamic properties (from table C)
     e      = 0.8                # Oswald factor [ ]
@@ -119,6 +119,7 @@ def statespacematrix(hp0,V0,alpha0,th0,m, plot):
     Cnda   =  -0.0120
     Cndr   =  -0.0939
 
+    '''
     # ----------------------------------Eigenvalue Verification ---------------------------------------
     # print("simplified short period",
     sp = get_short_period_eigenvalues(CZa, CZadot, muc, CZq, Cma, Cmadot, Cmq, KY2)
@@ -149,7 +150,7 @@ def statespacematrix(hp0,V0,alpha0,th0,m, plot):
         plt.ylabel("imaginary")
         plt.xlabel("real")
         #plt.show()
-
+    '''
     #--------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
 
     C1 = np.array([[(-2*muc*c)/(V0**2),0                    ,0    ,0],
@@ -195,7 +196,7 @@ def statespacematrix(hp0,V0,alpha0,th0,m, plot):
 
     return A_sym,B_sym,A_asym,B_asym
 
-
+'''
 plot = False
 if plot:
     a = statespacematrix(hp0,V0,alpha0,th0,m, True)
@@ -216,7 +217,7 @@ if plot:
     plt.xlabel("real")
     plt.show()
 
-'''
+
 A_ = 4*muc**2*KY2*(CZadot-2*muc)
 B_ = Cmadot*2*muc*(CZq+2*muc) - Cmq*2*muc*(CZadot-2*muc)- 2*muc*KY2*(CXu*(CZadot-2*muc)-2*muc*CZa)
 C_ = Cma*2*muc*(CZq+2*muc)-Cmadot*(2*muc*CX0+CXu*(CZq+2*muc))+Cmq*(CXu*(CZadot-2*muc)-2*muc*CZa)+2*muc*KY2*(CXa*CZu-CZa*CXu)
@@ -224,7 +225,7 @@ D_ = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cm
 E_ = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
 R_ = B_*C_*D_-A_*D_**2-B_**2*E_
 
-print(A_, B_, C_, D_, E_, R_)'''
+print(A_, B_, C_, D_, E_, R_)
 
 
 # print("simplified short period",get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky))
@@ -236,3 +237,4 @@ print(A_, B_, C_, D_, E_, R_)'''
 
 
 
+'''
