@@ -3,6 +3,8 @@
 #from Verification import geteigenvalues
 import numpy as np
 from math import pi, sin, cos
+from matplotlib import pyplot as plt
+from Verification import get_short_period_eigenvalues,get_phugoid_eigenvalues,get_aperiodic_roll_eigenvalue,get_spiral_motion_eigenvalue,get_dutch_roll_with_aperiodic_roll_eigenvalues,get_eigenvalues
 
 # xcg = 0.25 * c
 
@@ -17,7 +19,7 @@ th0    =  0.08           # pitch angle in the stationary flight condition [rad]
 m      = 10000            # mass [kg]
 
 #Definition returns the state space matrix for both the symmetric as asymmetric case
-def statespacematrix(hp0,V0,alpha0,th0,m):
+def statespacematrix(hp0,V0,alpha0,th0,m, plot):
 
     # aerodynamic properties (from table C)
     e      = 0.8                # Oswald factor [ ]
@@ -117,6 +119,37 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
     Cnda   =  -0.0120
     Cndr   =  -0.0939
 
+    # ----------------------------------Eigenvalue Verification ---------------------------------------
+    # print("simplified short period",
+    sp = get_short_period_eigenvalues(CZa, CZadot, muc, CZq, Cma, Cmadot, Cmq, KY2)
+
+    # print("simplified phugoid",d
+    phug = get_phugoid_eigenvalues(CXu, CZu, muc, CZ0)
+
+    # print("simplified aperiodic roll",
+    aperiodic = [get_aperiodic_roll_eigenvalue(Clp, mub, KX2)]
+    # print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
+    # print("simplified spiral",
+    spiral = [get_spiral_motion_eigenvalue(CL, Clb, Cnb, Clr, Cnr, Clp, CYb, Cnp, mub)]
+    # print("simplified Dutch roll",
+
+    dutch_roll = get_dutch_roll_with_aperiodic_roll_eigenvalues(mub, KX2, KZ2, KXZ, Clr, Cnp, Cnr, Clp, Clb, Cnb)
+
+    if plot:
+        plt.figure(figsize=(10, 5))
+        plt.subplot(121)
+        plt.scatter([x.real*V0/c for x in sp], [x.imag*V0/c for x in sp], color='r', marker='x')
+        plt.scatter([x.real*V0/c for x in phug], [x.imag*V0/c for x in phug], color='b', marker='x')
+        plt.scatter([x.real*V0/b for x in aperiodic], [x.imag*V0/b for x in aperiodic], color='y', marker='x')
+        plt.scatter([x.real*V0/b for x in spiral], [x.imag*V0/b for x in spiral], color='g', marker='x')
+        plt.scatter([x.real*V0/b for x in dutch_roll], [x.imag*V0/b for x in dutch_roll], color='c', marker='x')
+        plt.title("Eigenvalues of simplified models")
+        plt.grid()
+        plt.legend(labels=['short period', 'phugoid', 'aperiodic roll', 'spiral', '"special" dutch roll '])
+        plt.ylabel("imaginary")
+        plt.xlabel("real")
+        #plt.show()
+
     #--------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
 
     C1 = np.array([[(-2*muc*c)/(V0**2),0                    ,0    ,0],
@@ -162,6 +195,41 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
 
     return A_sym,B_sym,A_asym,B_asym
 
+a = statespacematrix(hp0,V0,alpha0,th0,m, True)
+
+eigenvalues_sym = get_eigenvalues(a[0])
+eigenvalues_asym = get_eigenvalues(a[2])
+
+plt.subplot(122)
+plt.scatter([x.real for x in eigenvalues_sym[0:2]], [x.imag for x in eigenvalues_sym[0:2]], color='r', marker='x')
+plt.scatter([x.real for x in eigenvalues_sym[2:4]], [x.imag for x in eigenvalues_sym[2:4]], color='b', marker='x')
+plt.scatter([x.real for x in eigenvalues_asym[0:1]], [x.imag for x in eigenvalues_asym[0:1]], color='y', marker='x')
+plt.scatter([x.real for x in eigenvalues_asym[3:4]], [x.imag for x in eigenvalues_asym[3:4]], color='g', marker='x')
+plt.scatter([x.real for x in eigenvalues_asym[1:3]], [x.imag for x in eigenvalues_asym[1:3]], color='c', marker='x')
+plt.title("Eigenvalues of total models")
+plt.grid()
+plt.legend(labels=['short period', 'phugoid', 'aperiodic roll', 'spiral', 'dutch roll '])
+plt.ylabel("imaginary")
+plt.xlabel("real")
+plt.show()
+
+'''
+A_ = 4*muc**2*KY2*(CZadot-2*muc)
+B_ = Cmadot*2*muc*(CZq+2*muc) - Cmq*2*muc*(CZadot-2*muc)- 2*muc*KY2*(CXu*(CZadot-2*muc)-2*muc*CZa)
+C_ = Cma*2*muc*(CZq+2*muc)-Cmadot*(2*muc*CX0+CXu*(CZq+2*muc))+Cmq*(CXu*(CZadot-2*muc)-2*muc*CZa)+2*muc*KY2*(CXa*CZu-CZa*CXu)
+D_ = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cmadot*(CX0*CXu-CZ0*CZu)+Cmq*(CXu*CZa-CZu*CXa)
+E_ = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
+R_ = B_*C_*D_-A_*D_**2-B_**2*E_
+
+print(A_, B_, C_, D_, E_, R_)'''
+
+
+# print("simplified short period",get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky))
+# print("simplified phugoid",get_phugoid_eigenvalues(cx_u, cz_u, mu_c, cz_0, ky))
+# print("simplified aperiodic roll",get_aperiodic_roll_eigenvalue(cl_p, mu_b, kx))
+# print("simplified dutch roll",get_dutch_roll_eigenvalues(mu_b, kz, cn_r, cy_beta, cn_beta))
+# print("simplified spiral",get_spiral_motion_eigenvalue(cl, cl_beta, cn_beta, cl_r, cn_r, cl_p, cy_beta, cn_p, mu_b))
+# print("simplified Dutch roll",get_dutch_roll_with_aperiodic_roll_eigenvalues(mu_b, kx, kz, kxz, cl_r, cn_p, cn_r, cl_p, cl_beta, cn_beta))
 
 
 
