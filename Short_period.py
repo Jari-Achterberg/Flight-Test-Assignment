@@ -22,7 +22,7 @@ Vtrue = Vtrue * 0.51444444444444444                                     #True ai
 #---------------------Phugoid------------------------------
 
 #Short, sharp deflection followed by a return to the centered position
-startvalue =27305                   #Starts at index 25385 (Phugoid)/27305 (Short Period)
+startvalue = 27305                   #Starts at index 25385 (Phugoid)/27305 (Short Period)
 endvalue = 27405                    #Ends at index 25485 (Phugoid)/27405 (Short Period)
 
 # Stationary flight condition
@@ -32,7 +32,7 @@ alpha0 = vane_AOA[startvalue]*(np.pi/180)   # angle of attack in the stationary 
 th0    = pitch[startvalue]*(np.pi/180)      # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      = 17000            # mass [kg]
+m      = 6385.191            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
 

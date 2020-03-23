@@ -37,7 +37,7 @@ alpha0 = vane_AOA[startvalue]*(np.pi/180)   # angle of attack in the stationary 
 th0    = pitch[startvalue]*(np.pi/180)      # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      = 17000            # mass [kg]
+m      = 6378.821            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
 
@@ -45,8 +45,8 @@ xinit = np.array([0,0,0,0])
 #xinit = np.array([0,rollangle[startvalue]*(np.pi/180),rollrate[startvalue]*(np.pi/180),yawrate[startvalue]*(np.pi/180)])
 
 #Input from the rudder and aileron
-Udeltar = deltar[startvalue:endvalue]*(np.pi/180)
-Udeltaa = deltaa[startvalue:endvalue]*(np.pi/180)
+Udeltar = -deltar[startvalue:endvalue]*(np.pi/180)
+Udeltaa = -deltaa[startvalue:endvalue]*(np.pi/180)
 
 #Generating an output vector with sideslip
 
@@ -94,7 +94,7 @@ yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial cond
 startvalue1 = 27280
 endvalue1 = startvalue1 + (endvalue-startvalue)
 
-plt.figure()
+plt.figure(1)
 plt.title('Response curves for a pulse-shaped rudder deflection, dutch roll')
 plt.subplot(2,2,1)
 plt.plot(T, sideslip_sim)
@@ -120,17 +120,17 @@ plt.grid()
 plt.legend(['Simulation','Dutch Roll Flight', 'Dutch Roll Yaw Damper'], loc=4)
 plt.ylabel('Yaw rate [degree/s]')
 plt.xlabel('Time [s]')
-plt.show()
+plt.show(1)
 
-plt.plot()
+plt.figure(2)
 plt.grid()
 plt.plot(T[0:250],rollrate[startvalue:endvalue],'k', linestyle='--')
 plt.plot(T[0:250],yawrate[startvalue:endvalue], 'b',  linestyle= '-')
 plt.legend(['Roll rate','Yaw rate'],loc=4)
 plt.ylabel('p,r [degree/s]')
 plt.xlabel('Time [s]')
-plt.show()
+plt.show(2)
 
-plt.figure()
-plt.plot(T,deltar[startvalue:endvalue], 'b', T, deltaa[startvalue:endvalue], 'r')
-plt.show()
+#plt.figure()
+#plt.plot(T,deltar[startvalue:endvalue], 'b', T, deltaa[startvalue:endvalue], 'r')
+#plt.show()

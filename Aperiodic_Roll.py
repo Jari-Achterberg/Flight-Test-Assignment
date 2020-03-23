@@ -36,7 +36,7 @@ alpha0 = vane_AOA[startvalue]*(np.pi/180)   # angle of attack in the stationary 
 th0    = pitch[startvalue]*(np.pi/180)      # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      = 17000            # mass [kg]
+m      = 6364.92            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
 

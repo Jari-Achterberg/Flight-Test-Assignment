@@ -22,13 +22,13 @@ m      = 10000            # mass [kg]
 def statespacematrix(hp0,V0,alpha0,th0,m):
 
     # aerodynamic properties (from table C)
-    e      = 0.8                # Oswald factor [ ]
-    CD0    = 0.04               # Zero lift drag coefficient [ ]
-    CLa    = 5.084              # Slope of CL-alpha curve [ ]
+    e      = 0.9502171503627244             # Oswald factor [ ]
+    CD0    = 0.021055067079004692           # Zero lift drag coefficient [ ]
+    CLa    = 4.492916965171044              # Slope of CL-alpha curve [ ]
 
     # Longitudinal stability (from table C)
-    Cma    = -0.5626            # longitudinal stability [ ]
-    Cmde   = -1.1642            # elevator effectiveness [ ]
+    Cma    = -0.6824789003603976            # longitudinal stability [ ]
+    Cmde   = -1.5450563993322224            # elevator effectiveness [ ]
 
 
     # Aircraft geometry
