@@ -24,11 +24,11 @@ Vtrue = Vtrue * 0.51444444444444444                                     #True ai
 
 #--------------------------------Spiral----------------------------------------------
 
-plt.figure(1)
+plt.figure()
 plt.grid()
 plt.plot(time.T, deltaa, 'b')
 plt.plot(time.T, deltar, 'r')
-plt.show(1)
+plt.show()
 
 #Spiral starts at t=3159 [s] and ends at t=3306 [s]
 startvalue = 31590
@@ -58,7 +58,7 @@ C = np.array([[0,1,0,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
 
-T, rollangle_sim, xout = ctrl.forced_response(sys, T=np.arange(0,147,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
+T, rollangle_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startvalue)/10,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
 rollangle_sim = rollangle_sim*(180/np.pi)         #from radians to degree
 rollangle_sim = rollangle_sim + rollangle[startvalue]       #implementing initial condition
 
@@ -68,7 +68,7 @@ C = np.array([[0,0,1,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
 
-T, rollrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,147,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
+T, rollrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startvalue)/10,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
 rollrate_sim = rollrate_sim*(180/np.pi)         #from radians/s to degree/s
 rollrate_sim = rollrate_sim + rollrate[startvalue]       #implementing initial condition
 
@@ -78,15 +78,18 @@ C = np.array([[0,0,0,1]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
 
-T, yawrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,147,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
+T, yawrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startvalue)/10,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
 yawrate_sim = yawrate_sim*(180/np.pi)                   #from radians/s to degree/s
 yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial condition
 
-plt.figure(2)
+plt.figure()
 plt.grid()
 plt.plot(T,rollangle_sim,T,rollangle[startvalue:endvalue])
 plt.legend(['Simulation','Spiral Motion'],loc=4)
 plt.ylabel('Roll angle [degree]')
 plt.xlabel('Time [s]')
-plt.show(2)
+plt.show()
 
+plt.figure()
+plt.plot(T,deltar[startvalue:endvalue], 'b', T, deltaa[startvalue:endvalue], 'r')
+plt.show()

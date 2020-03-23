@@ -53,7 +53,7 @@ C = np.array([[1,0,0,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
 
-T, sideslip_sim, xout = ctrl.forced_response(sys, T=np.arange(0,40,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
+T, sideslip_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startvalue)/10,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
 sideslip_sim = sideslip_sim*(180/np.pi)         #from radians to degree
 
 #Generating an output vector with rolling angle
@@ -62,7 +62,7 @@ C = np.array([[0,1,0,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
 
-T, rollangle_sim, xout = ctrl.forced_response(sys, T=np.arange(0,40,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
+T, rollangle_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startvalue)/10,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
 rollangle_sim = rollangle_sim*(180/np.pi)         #from radians to degree
 rollangle_sim = rollangle_sim + rollangle[startvalue]       #implementing initial condition
 
@@ -72,7 +72,7 @@ C = np.array([[0,0,1,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
 
-T, rollrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,40,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
+T, rollrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startvalue)/10,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
 rollrate_sim = rollrate_sim*(180/np.pi)         #from radians/s to degree/s
 rollrate_sim = rollrate_sim + rollrate[startvalue]       #implementing initial condition
 
@@ -82,11 +82,11 @@ C = np.array([[0,0,0,1]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
 
-T, yawrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,40,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
+T, yawrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startvalue)/10,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
 yawrate_sim = yawrate_sim*(180/np.pi)                   #from radians/s to degree/s
 yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial condition
 
-plt.figure(1)
+plt.figure()
 plt.title('Response curves for a pulse-shaped aileron deflection, aperiodic roll')
 plt.subplot(2,2,1)
 plt.plot(T, sideslip_sim)
@@ -112,6 +112,8 @@ plt.grid()
 plt.legend(['Simulation','Flight Data'], loc=4)
 plt.ylabel('Yaw rate [degree/s]')
 plt.xlabel('Time [s]')
-plt.show(1)
+plt.show()
 
-#sd
+plt.figure()
+plt.plot(T,deltar[startvalue:endvalue], 'b', T, deltaa[startvalue:endvalue], 'r')
+plt.show()
