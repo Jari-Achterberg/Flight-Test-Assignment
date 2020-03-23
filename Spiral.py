@@ -93,3 +93,4 @@ plt.show()
 plt.figure()
 plt.plot(T,deltar[startvalue:endvalue], 'b', T, deltaa[startvalue:endvalue], 'r')
 plt.show()
+#----
