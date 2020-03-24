@@ -142,6 +142,12 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
     # print("simplified Dutch roll",
 
     dutch_roll = get_dutch_roll_with_aperiodic_roll_eigenvalues(mub, KX2, KZ2, KXZ, Clr, Cnp, Cnr, Clp, Clb, Cnb)
+    print(sp)
+    print("sp: ", sp[0]*(V0/c))
+    print("phug:", phug[0]*V0/c)
+    print("aperiodic: ,",aperiodic[0]*V0/b)
+    print("spiral: ", spiral[0]*V0/b)
+    print("dr: ", dutch_roll[0]*V0/b, dutch_roll[1]*V0/b, dutch_roll[2]*V0/b)
 
     if plot:
         plt.figure(figsize=(10, 5))
@@ -158,7 +164,7 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
         plt.xlabel("real")
         #plt.show()
     '''
-    #--------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
+    # --------Symmetric equations of motion in the form of:  C1 * xdot + C2 * x + C3 * u     --------
 
     C1 = np.array([[(-2*muc*c)/(V0**2),0                    ,0    ,0],
                    [0                 ,(CZadot-2*muc)*(c/V0),0    ,0],
@@ -204,9 +210,9 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
     return A_sym,B_sym,A_asym,B_asym
 
 '''
-plot = False
+plot = True
 if plot:
-    a = statespacematrix(hp0,V0,alpha0,th0,m, True)
+    a = statespacematrix(hp0,V0,alpha0,th0,m)
 
     eigenvalues_sym = get_eigenvalues(a[0])
     eigenvalues_asym = get_eigenvalues(a[2])
@@ -232,7 +238,7 @@ D_ = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cm
 E_ = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
 R_ = B_*C_*D_-A_*D_**2-B_**2*E_
 
-print(A_, B_, C_, D_, E_, R_)
+# print(A_, B_, C_, D_, E_, R_)
 
 
 # print("simplified short period",get_short_period_eigenvalues(cz_alpha, cza_dot, mu_c, cz_q, cm_alpha, cm_alpha_dot, cm_q, ky))

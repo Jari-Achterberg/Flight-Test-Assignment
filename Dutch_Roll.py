@@ -41,6 +41,8 @@ m      = 6378.821            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
 
+print("asymmetric dutchroll: ", np.linalg.eigvals(A_asym)[1:3])
+
 xinit = np.array([0,0,0,0])
 #xinit = np.array([0,rollangle[startvalue]*(np.pi/180),rollrate[startvalue]*(np.pi/180),yawrate[startvalue]*(np.pi/180)])
 
@@ -94,6 +96,30 @@ yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial cond
 startvalue1 = 28271
 endvalue1 = startvalue1 + (endvalue-startvalue)
 
+
+a, b = 55, -0.23
+ePower1 = a*np.exp(b*T)     # - 0.32*T + 3.7
+ePower2 = -a*np.exp(b*T)    # - 0.32*T + 3.7
+Thalf = 3.01
+# peak 1 and 5
+amp1 = 3.62
+amp2 = 16.52
+P = (amp2 - amp1)/4
+print("T: ", Thalf)
+print("P: ", P)
+plt.plot(T, ePower1, T, ePower2, T, yawrate[startvalue:endvalue])
+plt.grid()
+plt.legend(['e1','e2','Dutch Roll Flight'],loc=4)
+plt.ylabel('Roll rate [degree/s]')
+plt.xlabel('Time [s]')
+plt.show()
+
+print(V0)
+eigenvalue_real = np.log(0.5) / Thalf
+eigenvalue_imag = 2*np.pi/P
+print("lambda = ", eigenvalue_real, "+ i", eigenvalue_imag)
+
+'''
 plt.figure(1)
 plt.title('Response curves for a pulse-shaped rudder deflection, dutch roll')
 plt.subplot(2,2,1)

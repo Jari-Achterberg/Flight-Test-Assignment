@@ -22,7 +22,7 @@ Vtrue = Vtrue * 0.51444444444444444                                     #True ai
 #---------------------Short period------------------------------
 
 #Short, sharp deflection followed by a return to the centered position
-startvalue = 27305                   #Starts at index 25385 (Phugoid)/27305 (Short Period)
+startvalue = 27305                  #Starts at index 25385 (Phugoid)/27305 (Short Period)
 endvalue = 27405                    #Ends at index 25485 (Phugoid)/27405 (Short Period)
 
 # Stationary flight condition
@@ -35,6 +35,9 @@ th0    = pitch[startvalue]*(np.pi/180)      # pitch angle in the stationary flig
 m      = 6385.191            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
+
+c = 2.0569
+print("symmetric short period: ", np.linalg.eigvals(A_sym)[0:2])
 
 #------------------------Short Period----------------------------------------
 
@@ -106,10 +109,28 @@ pitch_rate_sim_ = pitch_rate_sim_ + pitch_rate[startvalue]*(np.pi/180)          
 V_sim = u_sim / np.cos(aoa_sim)
 V_sim_ = u_sim_ / np.cos(aoa_sim_)
 
-#Converting radians to degree
+# Converting radians to degree
 pitch_sim = pitch_sim[:] * (180/np.pi)
 pitch_rate_sim = pitch_rate_sim[:] * (180/np.pi)
 aoa_sim = aoa_sim[:] * (180/np.pi)
+#
+a, b = 6, -1.2
+ePower1 = a*np.exp(b*T) - 0.32*T + 3.7
+ePower2 = -a*np.exp(b*T) - 0.32*T + 3.7
+Thalf = 0.533
+P = 3.84 - 0.7  # P = 2*np.pi/1.3
+
+plt.plot(T, ePower2, T, ePower1, T, pitch_rate[startvalue:endvalue])
+plt.grid()
+plt.legend(['epower','epower2','Flight Data'],loc=4)
+plt.ylabel('Pitch rate [degree/sec]')
+plt.xlabel('Time [s]')
+plt.show()
+####
+eigenvalue_real = np.log(0.5) / Thalf
+eigenvalue_imag = 2*np.pi/P
+print("lambda = ", eigenvalue_real, "+ i", eigenvalue_imag)
+print(V0)
 
 pitch_sim_ = pitch_sim_[:] * (180/np.pi)
 pitch_rate_sim_ = pitch_rate_sim_[:] * (180/np.pi)

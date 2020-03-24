@@ -36,23 +36,7 @@ th0    = pitch[startvalue]*(np.pi/180)      # pitch angle in the stationary flig
 m      = 6406.644            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
-
-#Plotting eigenvalues
-plot = True
-if plot:
-    a = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)
-
-    eigenvalues_sym = get_eigenvalues(a[0])
-
-    plt.figure(4)
-    plt.scatter([x.real for x in eigenvalues_sym[0:2]], [x.imag for x in eigenvalues_sym[0:2]], color='r', marker='x')
-    plt.scatter([x.real for x in eigenvalues_sym[2:4]], [x.imag for x in eigenvalues_sym[2:4]], color='b', marker='x')
-    plt.title("Eigenvalues of total models")
-    plt.grid()
-    plt.legend(labels=['short period', 'phugoid'])
-    plt.ylabel("imaginary")
-    plt.xlabel("real")
-    plt.show(4)
+print("symmetric phugoid: ", np.linalg.eigvals(A_sym)[2:4])
 
 #xinit = np.array([Vtrue[25360]*np.cos(vane_AOA[25360]*(np.pi/180)), vane_AOA[25360]*(np.pi/180), pitch[25360]*(np.pi/180), pitch_rate[25360]*(np.pi/180)])
 xinit = np.array([0,0,0,0])
@@ -126,7 +110,25 @@ V_sim_ = u_sim_ / np.cos(aoa_sim_)
 pitch_sim = pitch_sim[:] * (180/np.pi)
 pitch_rate_sim = pitch_rate_sim[:] * (180/np.pi)
 aoa_sim = aoa_sim[:] * (180/np.pi)
+##
+a,b = -2.011, -0.0055
+ePower = a* np.exp(b* T)
+plt.plot(T, ePower, T, pitch_rate[25360:26910])
+plt.grid()
+plt.legend(['epower','Flight Data'], loc=4)
+plt.ylabel('Pitch rate [degree/sec]')
+plt.xlabel('Time [s]')
+plt.show()
 
+amp1 = 7.03
+amp2 = 125.2
+Thalf = 123
+P = (amp2 - amp1)/3
+cv = 1 # cv = 2.0569/V0
+eigenvalue_real = np.log(0.5) / Thalf * cv
+eigenvalue_imag = 2*np.pi/P*cv
+print("lambda = ", eigenvalue_real, "+ i", eigenvalue_imag)
+###
 pitch_sim_ = pitch_sim_[:] * (180/np.pi)
 pitch_rate_sim_ = pitch_rate_sim_[:] * (180/np.pi)
 aoa_sim_ = aoa_sim_[:] * (180/np.pi)

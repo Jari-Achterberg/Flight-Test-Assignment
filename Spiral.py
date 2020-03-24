@@ -24,11 +24,11 @@ Vtrue = Vtrue * 0.51444444444444444                                     #True ai
 
 #--------------------------------Spiral----------------------------------------------
 
-plt.figure()
-plt.grid()
-plt.plot(time.T, deltaa, 'b')
-plt.plot(time.T, deltar, 'r')
-plt.show()
+#plt.figure()
+#p#lt.grid()
+#plt.plot(time.T, deltaa, 'b')
+#plt.plot(time.T, deltar, 'r')
+# plt.show()
 
 #Spiral starts at t=3159 [s] and ends at t=3306 [s]
 startvalue = 31590
@@ -44,6 +44,7 @@ th0    = pitch[startvalue]*(np.pi/180)      # pitch angle in the stationary flig
 m      = 6332.428            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
+print("asymmetric spiral: ", np.linalg.eigvals(A_asym))
 
 xinit = np.array([0,0,0,0])
 #xinit = np.array([0,rollangle[startvalue]*(np.pi/180),rollrate[startvalue]*(np.pi/180),yawrate[startvalue]*(np.pi/180)])
@@ -82,6 +83,26 @@ T, yawrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startva
 yawrate_sim = yawrate_sim*(180/np.pi)                   #from radians/s to degree/s
 yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial condition
 
+a, b = 11.8, +0.0092
+TE = np.arange(-150, 147, 0.1)
+ePower1 = a*np.exp(b*TE)
+ePower2 = -a*np.exp(b*TE)
+Thalf = -75.34 # -71.68 # = - 76.7
+P = 10**99  # P = 2*np.pi/1.3
+
+plt.figure()
+plt.grid()
+plt.plot(TE, ePower2, T, rollangle[startvalue:endvalue])
+plt.legend(['e','Spiral Motion'],loc=1)
+plt.ylabel('Roll angle [degree]')
+plt.xlabel('Time [s]')
+plt.show()
+
+eigenvalue_real = np.log(0.5) / Thalf
+eigenvalue_imag = 2*np.pi/P
+print("lambda = ", eigenvalue_real, "+ i", eigenvalue_imag)
+
+'''
 plt.figure()
 plt.grid()
 plt.plot(T,rollangle_sim,T,rollangle[startvalue:endvalue])
@@ -94,3 +115,4 @@ plt.figure()
 plt.plot(T,deltar[startvalue:endvalue], 'b', T, deltaa[startvalue:endvalue], 'r')
 plt.show()
 #----
+'''

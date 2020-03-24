@@ -40,6 +40,8 @@ m      = 6364.92            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
 
+print("asymmetric spiral: ", np.linalg.eigvals(A_asym))
+
 xinit = np.array([0,0,0,0])
 #xinit = np.array([0,rollangle[startvalue]*(np.pi/180),rollrate[startvalue]*(np.pi/180),yawrate[startvalue]*(np.pi/180)])
 
@@ -66,6 +68,7 @@ T, rollangle_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-start
 rollangle_sim = rollangle_sim*(180/np.pi)         #from radians to degree
 rollangle_sim = rollangle_sim + rollangle[startvalue]       #implementing initial condition
 
+# test aperiodic roll to find eigenvalue
 #Generating an output vector with roll rate
 
 C = np.array([[0,0,1,0]])
@@ -85,7 +88,28 @@ sys = ctrl.ss(A_asym,B_asym,C,D)
 T, yawrate_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startvalue)/10,0.1), U=np.concatenate((Udeltaa.T, Udeltar.T), axis=0),  X0=xinit)
 yawrate_sim = yawrate_sim*(180/np.pi)                   #from radians/s to degree/s
 yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial condition
+###
 
+a, b = 85, -4.35
+ePower1 = a*np.exp(b*T) - 8
+ePower2 = -a*np.exp(b*T) - 8
+Thalf = 0.1645
+P = 10**99  # P = 2*np.pi/1.3
+
+plt.plot(T, ePower1, T, rollrate[startvalue:endvalue])
+plt.grid()
+plt.legend(['e1','Flight Data'],loc=1)
+plt.ylabel('Roll rate [degree]')
+plt.xlabel('Time [s]')
+plt.xlim(-0.5,10)
+plt.show()
+
+eigenvalue_real = np.log(0.5) / Thalf
+eigenvalue_imag = 2*np.pi/P
+print("lambda = ", eigenvalue_real, "+ i", eigenvalue_imag)
+
+###
+'''
 plt.figure()
 plt.title('Response curves for a pulse-shaped aileron deflection, aperiodic roll')
 plt.subplot(2,2,1)
@@ -117,3 +141,4 @@ plt.show()
 plt.figure()
 plt.plot(T,deltar[startvalue:endvalue], 'b', T, deltaa[startvalue:endvalue], 'r')
 plt.show()
+'''
