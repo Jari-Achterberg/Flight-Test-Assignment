@@ -4,6 +4,7 @@ from Cit_par import statespacematrix
 import scipy.io as sio
 import matplotlib.pyplot as plt
 
+
 #-----------Importing matlab flight data-------------------
 
 mat_contents = sio.loadmat('FTISxprt-20200305_flight3.mat')
@@ -146,7 +147,7 @@ plt.grid()
 plt.legend(['Simulation','Dutch Roll Flight', 'Dutch Roll Yaw Damper'], loc=4)
 plt.ylabel('Yaw rate [degree/s]')
 plt.xlabel('Time [s]')
-plt.show(1)
+plt.show()
 
 plt.figure(2)
 plt.grid()
