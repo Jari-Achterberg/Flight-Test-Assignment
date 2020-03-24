@@ -91,7 +91,7 @@ yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial cond
 
 #----------------------------Dutch roll with yaw damping--------------------------------
 
-startvalue1 = 27280
+startvalue1 = 28271
 endvalue1 = startvalue1 + (endvalue-startvalue)
 
 plt.figure(1)
@@ -131,6 +131,6 @@ plt.ylabel('p,r [degree/s]')
 plt.xlabel('Time [s]')
 plt.show(2)
 
-#plt.figure()
-#plt.plot(T,deltar[startvalue:endvalue], 'b', T, deltaa[startvalue:endvalue], 'r')
-#plt.show()
+plt.figure()
+plt.plot(T,deltar[startvalue1:endvalue1], 'b', T, deltaa[startvalue1:endvalue1], 'r')
+plt.show()

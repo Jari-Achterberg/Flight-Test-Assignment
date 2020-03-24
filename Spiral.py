@@ -85,7 +85,7 @@ yawrate_sim = yawrate_sim + yawrate[startvalue]       #implementing initial cond
 plt.figure()
 plt.grid()
 plt.plot(T,rollangle_sim,T,rollangle[startvalue:endvalue])
-plt.legend(['Simulation','Spiral Motion'],loc=4)
+plt.legend(['Simulation','Spiral Motion'],loc=1)
 plt.ylabel('Roll angle [degree]')
 plt.xlabel('Time [s]')
 plt.show()

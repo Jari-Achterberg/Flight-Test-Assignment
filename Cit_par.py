@@ -83,6 +83,7 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
 
     CX0    = W * sin(th0) / (0.5 * rho * V0 ** 2 * S)
     CXu    = -0.095
+    #CXu = -0.125            #Change in stability coefficient for phugoid 1/2
     CXa    = 0.47966		# Positive! (has been erroneously negative since 1993)
     CXadot = +0.08330
     CXq    = -0.28170
@@ -90,7 +91,9 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
 
     CZ0    = -W * cos(th0) / (0.5 * rho * V0 ** 2 * S)
     CZu    = -0.37616
+    #CZu = -0.63              #Change in stability coefficient for phugoid 2/2
     CZa    = -5.74340
+    #CZa = -5.0                #Change in stability coefficient for short period 1/2
     CZadot = -0.00350
     CZq    = -5.66290
     CZde   = -0.69612
@@ -98,6 +101,7 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
     Cmu    = +0.06990
     Cmadot = +0.17800
     Cmq    = -8.79415
+    #Cmq = -12.3                 #Change in stability coefficient for short period 2/2
 
     CYb    = -0.7500
     CYbdot =  0
@@ -107,7 +111,9 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
     CYdr   = +0.2300
 
     Clb    = -0.10260
+    #Clb = -0.26                #Change in stability coefficient for spiral motion 1/2
     Clp    = -0.71085
+    #Clp = -0.6              #Change in stability coefficient for aperiod roll
     Clr    = +0.23760
     Clda   = -0.23088
     Cldr   = +0.03440
@@ -116,6 +122,7 @@ def statespacematrix(hp0,V0,alpha0,th0,m):
     Cnbdot =   0
     Cnp    =  -0.0602
     Cnr    =  -0.2061
+    #Cnr = -0.3                 #Change in stability coefficient for spiral motion 2/2
     Cnda   =  -0.0120
     Cndr   =  -0.0939
 
