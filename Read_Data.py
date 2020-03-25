@@ -1,18 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Mar  9 11:07:04 2020
-
-@author: simon
-"""
-
 import numpy as np
 import subprocess
 import matplotlib.pyplot as plt
 
-
-
-###mass = np.genfromtxt('Data_Test.csv', skip_header = 9,max_rows = 1)
-
+# mass = np.genfromtxt('Data_Test.csv', skip_header = 9,max_rows = 1)
 F_block = np.loadtxt('Data_Test.csv', delimiter = ';', skiprows = 17, max_rows = 1, usecols = 1) # [lbs]
 mass_pl = np.loadtxt('Data_Test.csv', delimiter = ';', skiprows = 7, max_rows = 9, usecols = 6) # read mass of all persons [kg]
 CLCD = np.loadtxt('Data_Test.csv', delimiter = ';', skiprows = 27, max_rows = 6, usecols = (1,2,3,4,5,6,7,8,9)) # read data CL-CD measurements
@@ -22,7 +12,6 @@ cg = np.loadtxt('Data_Test.csv', delimiter = ';', skiprows = 73, max_rows = 2, u
 
 # ---- General data ----
 F_block = F_block * 0.45359237
-
 
 # ---- CL-CD measurements ----
 t_CLCD = CLCD[:,0] * 60 + CLCD[:,1] # total time in [s] for CL-CD measurements
@@ -34,16 +23,6 @@ FFr_CLCD = CLCD[:,6] * 0.45359237 / 3600 # fuel flow right engine [kg/s] for CL-
 F_used_CLCD = CLCD[:,7] * 0.45359237 # fuel used by both engines in [kg] for CL-CD measurements
 TAT_CLCD = CLCD[:,8] + 273.15 # Total ambient temperature [K] for CL-CD measurements
 
-# print(F_block)
-# print(t_CLCD)
-# print(hp_CLCD)
-# print(IAS_CLCD)
-# print(alpha_CLCD)
-# print(FFl_CLCD)
-# print(FFr_CLCD)
-# print(F_used_CLCD)
-# print(TAT_CLCD)
-# print(CLCD)
 # ---- Trim measurements ----
 t_trim = trim[:,0] * 60 + trim[:,1] # total time in [s] for trim measurements
 hp_trim = trim[:,2] * 0.3048 # hp [m] for trim measurements
@@ -72,19 +51,17 @@ de_cg = np.deg2rad(cg[:,5]) # elevator deflection angle in [rad] for trim measur
 detr_cg = np.deg2rad(cg[:,6]) # trim tab angle in [rad] for trim measurements
 Fe_cg = cg[:,7] # Stick force in [N] for trim measurements
 
-
 # ---- CL and CD curves ----
 OEW = 9165 * 0.45359237 # Operational empty weight [kg]
 W_ramp = np.sum(mass_pl) + F_block + OEW # [kg]                       !!!!!!!!!!!!!!!!
 rho_0 = 1.225 # [kg/m^3]
 S = 30.0 # [m^2]
-#CD_0 = 0.04 # zero-lift drag []
+# CD_0 = 0.04 # zero-lift drag []
 c = 2.0569 # mean chord [m]
 b = 15.911 # Span [m]
 A = b/c # Aspect ratio []
 labda = -0.0065 # Temp gradient
 T_0  = 288.15
-
 p_0 = 101325
 g = 9.81
 R = 287
@@ -92,18 +69,13 @@ gamma = 1.4
 nu_air = 13.28*10**-6 # Kinematic vicosity [m^2/s]
 
 
-
-
 hpp_CLCD = np.reshape(hp_CLCD, (6,1))
-
 
 p = p_0*((1+(labda*hp_CLCD/T_0))**(-g/(labda*R)))
 
 # Mach number
-M = np.sqrt((2/(gamma-1))*((1+(p_0/p)*(((1+(((gamma-1)/(2*gamma))*(rho_0/p_0)*IAS_CLCD*IAS_CLCD))**(gamma/(gamma-1)))-1))**((gamma-1)/gamma)-1)) 
-
+M = np.sqrt((2/(gamma-1))*((1+(p_0/p)*(((1+(((gamma-1)/(2*gamma))*(rho_0/p_0)*IAS_CLCD*IAS_CLCD))**(gamma/(gamma-1)))-1))**((gamma-1)/gamma)-1))
 T = np.reshape(TAT_CLCD/(1+((gamma-1)/2)*M*M),(6,1))
-
 a = np.sqrt(gamma*R*T)
 
 MM = np.reshape(M,(6,1))
@@ -120,46 +92,27 @@ DTT = TISA - T
 
 Re = c * V_t / nu_air # Reynolds range:  10E6 - 21E6
 
-
 FFll_CLCD = np.reshape(FFl_CLCD, (6,1))
 FFrr_CLCD = np.reshape(FFr_CLCD, (6,1))
 np.savetxt("matlab.dat",np.hstack((hpp_CLCD, MM, DTT, FFll_CLCD, FFrr_CLCD)), delimiter = ' ')
 subprocess.run("thrust(1).exe")
 Thrust = np.sum(np.loadtxt('thrust.dat'),1)
 Thrustt = np.reshape(Thrust,(6,1))
-
-#CL = (W_ramp-F_used_CLCD)*2*9.81/(rho_0*(np.reshape(V_e,(6,))**2)*S)
+# CL = (W_ramp-F_used_CLCD)*2*9.81/(rho_0*(np.reshape(V_e,(6,))**2)*S)
 CL = (W_ramp-F_used_CLCD)*2*9.81/(rho_0*(IAS_CLCD**2)*S)
-#CD1 = Thrust * 2 / (rho_0 * IAS_CLCD**2 * S)
+# CD1 = Thrust * 2 / (rho_0 * IAS_CLCD**2 * S)
 CD1 = np.reshape(Thrustt * 2 / (rho * V_t**2 * S),(6,))
 slope = np.mean(((CL**2)[1:]-(CL**2)[:-1])/(CD1[1:]-CD1[:-1]))
 e = np.pi*A/slope
 CD_0 = np.mean(CD1-CL**2/(np.pi*A*e))
 CD = CD_0 + CL**2/(A*e*np.pi)
-#CL[0]/slope
-#CD_0 = 0.0203
-#e = CL*CL/(np.pi*A*(CD1-CD_0))
+# CL[0]/slope
+# CD_0 = 0.0203
+# e = CL*CL/(np.pi*A*(CD1-CD_0))
 CL_alpha = (CL[-1]-CL[0])/(alpha_CLCD[-1]-alpha_CLCD[0]) # [rad]
 
-
-# plt.figure()
-# plt.subplot(1,2,1)
-# plt.title("CL-CD curve")
-# plt.grid()
-# plt.xlabel('CD [-]')
-# plt.ylabel('CL [-]')
-# plt.plot(CD1, CL)
-# plt.subplot(1,2,2)
-# plt.title("CL-AoA curve")
-# plt.grid()
-# plt.xlabel('AoA [deg]')
-# plt.ylabel('CL [-]')
-# plt.plot(np.rad2deg(alpha_CLCD),CL)
-# plt.show()
-
-
 # ----- Trim curve measurements -----
-#cg locations for cg shift measurements. Values taken from mass balance report by Wessel
+# cg locations for cg shift measurements. Values taken from mass balance report by Wessel
 x_cg1 = 7.1489 # [m]
 x_cg2 = 7.0952 # [m]
 
@@ -179,8 +132,7 @@ V_e_cg = V_t_cg * np.sqrt(rho_cg/rho_0)
 CN_cg = np.mean((W_ramp-F_used_cg)*2*9.81/(rho_0*(np.reshape(V_e_cg,(2,))**2)*S))
 Cm_delta = -1/(de_cg[-1]-de_cg[0])*CN_cg*(x_cg2-x_cg1)/c
 
-
-#Trim: find d(delta)/d(alpha)
+# Trim: find d(delta)/d(alpha)
 hpp_trim = np.reshape(hp_trim, (7,1))
 p_trim = p_0*((1+(labda*hp_trim/T_0))**(-g/(labda*R)))
 # Mach number
@@ -198,10 +150,6 @@ DTT_trim = TISA_trim - T_trim
 CN_trim = (W_ramp-F_used_trim)*2*9.81/(rho_0*(np.reshape(V_e_trim,(7,))**2)*S)
 deda = (np.min(de_trim)-np.max(de_trim))/(np.max(alpha_trim)-np.min(alpha_trim)) # d(delta)/d(alpha)
 Cm_a = -deda*Cm_delta
-
-# plt.figure()
-# plt.plot(alpha_trim, de_trim)
-# plt.show()
 
 # ----- Reduction of measurement data -------
 Ws = 60500 # [N] Standard aircraft mass
@@ -255,4 +203,4 @@ print("CD_0:", CD_0)
 print("CL_alpha:", CL_alpha)
 print("Cm_alpha:", Cm_a)
 print("Cm_delta:", Cm_delta)
-print("Cm_0:",Cm0)
+print("Cm_0:", Cm0)

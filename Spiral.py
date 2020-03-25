@@ -4,8 +4,7 @@ from Cit_par import statespacematrix
 import scipy.io as sio
 import matplotlib.pyplot as plt
 
-#-----------Importing matlab flight data-------------------
-
+# -----------Importing matlab flight data-------------------
 mat_contents = sio.loadmat('FTISxprt-20200305_flight3.mat')
 vane_AOA = mat_contents['flightdata'][0][0][0][0][0][0]                 #Angle of attack in degree
 time = mat_contents['flightdata'][0][0][-1][0][0][0]                    #Time in seconds
@@ -22,15 +21,8 @@ yawrate = mat_contents['flightdata'][0][0][28][0][0][0]                 #Body ya
 Pressure_Altitude = Pressure_Altitude * 0.3048                          #Pressure altitude in m
 Vtrue = Vtrue * 0.51444444444444444                                     #True airspeed in m/s
 
-#--------------------------------Spiral----------------------------------------------
-
-#plt.figure()
-#p#lt.grid()
-#plt.plot(time.T, deltaa, 'b')
-#plt.plot(time.T, deltar, 'r')
-# plt.show()
-
-#Spiral starts at t=3159 [s] and ends at t=3306 [s]
+# --------------------------------Spiral----------------------------------------------
+# Spiral starts at t=3159 [s] and ends at t=3306 [s]
 startvalue = 31590
 endvalue = 33060
 
@@ -54,7 +46,6 @@ Udeltar = deltar[startvalue:endvalue]*(np.pi/180)
 Udeltaa = deltaa[startvalue:endvalue]*(np.pi/180)
 
 #Generating an output vector with rolling angle
-
 C = np.array([[0,1,0,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
@@ -64,7 +55,6 @@ rollangle_sim = rollangle_sim*(180/np.pi)         #from radians to degree
 rollangle_sim = rollangle_sim + rollangle[startvalue]       #implementing initial condition
 
 #Generating an output vector with roll rate
-
 C = np.array([[0,0,1,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
@@ -74,7 +64,6 @@ rollrate_sim = rollrate_sim*(180/np.pi)         #from radians/s to degree/s
 rollrate_sim = rollrate_sim + rollrate[startvalue]       #implementing initial condition
 
 #Generating an output vector with yaw rate
-
 C = np.array([[0,0,0,1]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)

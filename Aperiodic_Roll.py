@@ -5,7 +5,6 @@ import scipy.io as sio
 import matplotlib.pyplot as plt
 
 #-----------Importing matlab flight data-------------------
-
 mat_contents = sio.loadmat('FTISxprt-20200305_flight3.mat')
 vane_AOA = mat_contents['flightdata'][0][0][0][0][0][0]                 #Angle of attack in degree
 time = mat_contents['flightdata'][0][0][-1][0][0][0]                    #Time in seconds
@@ -23,7 +22,6 @@ Pressure_Altitude = Pressure_Altitude * 0.3048                          #Pressur
 Vtrue = Vtrue * 0.51444444444444444                                     #True airspeed in m/s
 
 #---------------------Aperiod roll------------------------------
-
 #We have a pulse shaped aileron deflection on t = 2915 [s] for aperiodic roll
 
 startvalue =29060                   #Starts at index 29060
@@ -39,18 +37,15 @@ th0    = pitch[startvalue]*(np.pi/180)      # pitch angle in the stationary flig
 m      = 6364.92            # mass [kg]
 
 A_sym,B_sym,A_asym,B_asym = statespacematrix(hp0[0],V0[0],alpha0[0],th0[0],m)     #Calling state space matrix
-
 print("asymmetric spiral: ", np.linalg.eigvals(A_asym))
 
 xinit = np.array([0,0,0,0])
 #xinit = np.array([0,rollangle[startvalue]*(np.pi/180),rollrate[startvalue]*(np.pi/180),yawrate[startvalue]*(np.pi/180)])
-
 #Input from the rudder and aileron
 Udeltar = -deltar[startvalue:endvalue]*(np.pi/180)      #Minus because of other sign convention?
 Udeltaa = -deltaa[startvalue:endvalue]*(np.pi/180)      #Minus because of other sign convention?
 
 #Generating an output vector with sideslip
-
 C = np.array([[1,0,0,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
@@ -59,7 +54,6 @@ T, sideslip_sim, xout = ctrl.forced_response(sys, T=np.arange(0,(endvalue-startv
 sideslip_sim = sideslip_sim*(180/np.pi)         #from radians to degree
 
 #Generating an output vector with rolling angle
-
 C = np.array([[0,1,0,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
@@ -70,7 +64,6 @@ rollangle_sim = rollangle_sim + rollangle[startvalue]       #implementing initia
 
 # test aperiodic roll to find eigenvalue
 #Generating an output vector with roll rate
-
 C = np.array([[0,0,1,0]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
@@ -80,7 +73,6 @@ rollrate_sim = rollrate_sim*(180/np.pi)         #from radians/s to degree/s
 rollrate_sim = rollrate_sim + rollrate[startvalue]       #implementing initial condition
 
 #Generating an output vector with roll rate
-
 C = np.array([[0,0,0,1]])
 D = np.array([[0,0]])
 sys = ctrl.ss(A_asym,B_asym,C,D)
@@ -107,8 +99,6 @@ plt.show()
 eigenvalue_real = np.log(0.5) / Thalf
 eigenvalue_imag = 2*np.pi/P
 print("lambda = ", eigenvalue_real, "+ i", eigenvalue_imag)
-
-###
 '''
 plt.figure()
 plt.title('Response curves for a pulse-shaped aileron deflection, aperiodic roll')
